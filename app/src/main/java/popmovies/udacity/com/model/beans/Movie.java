@@ -4,30 +4,53 @@
 
 package popmovies.udacity.com.model.beans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
+import popmovies.udacity.com.model.mappers.MovieMapper;
 
 /**
  * Abstraction of a movie object.
  *
  * Contains details of single movie.
  */
-public class Movie {
+public class Movie implements Parcelable {
 
+    /**
+     * Id
+     */
     @SerializedName("id")
     protected int mId;
 
+    /**
+     * Title
+     */
     @SerializedName("original_title")
     protected String mTitle;
 
+    /**
+     * Poster path
+     */
     @SerializedName("poster_path")
     protected String mPosterPath;
 
+    /**
+     * Plot overview
+     */
     @SerializedName("overview")
-    protected String mPlotOverivew;
+    protected String mPlotOverview;
 
+    /**
+     * User's rating
+     */
     @SerializedName("vote_average")
     protected double mUserRating;
 
+    /**
+     * Relase date
+     */
     @SerializedName("release_date")
     protected String mReleaseDate;
 
@@ -59,11 +82,11 @@ public class Movie {
     }
 
     public String getPlotOverview() {
-        return mPlotOverivew;
+        return mPlotOverview;
     }
 
     public void setPlotOverview(String plotOverview) {
-        mPlotOverivew = plotOverview;
+        mPlotOverview = plotOverview;
     }
 
     public double getUserRating() {
@@ -80,5 +103,36 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) {
         mReleaseDate = releaseDate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        MovieMapper.writeToParcel(dest, this);
+    }
+
+    /**
+     * Creator that generates instancess of class from a Parcel
+     */
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return MovieMapper.constructFromParcel(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }
