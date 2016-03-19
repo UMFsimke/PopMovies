@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PopMovies</string>
+    <string-array name="gallery_types">
+        <item>Popular</item>
+        <item>Top Rated</item>
+    </string-array>
 </resources>

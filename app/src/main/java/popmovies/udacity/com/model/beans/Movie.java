@@ -18,6 +18,8 @@ import popmovies.udacity.com.model.mappers.MovieMapper;
  */
 public class Movie implements Parcelable {
 
+    private static final String MOVIE_POSTER_ENDPOINT = "http://image.tmdb.org/t/p/w185/";
+
     /**
      * Id
      */
@@ -103,6 +105,14 @@ public class Movie implements Parcelable {
 
     public void setReleaseDate(String releaseDate) {
         mReleaseDate = releaseDate;
+    }
+
+    /**
+     * Returns full formatted URL string for movie poster
+     * @return Full URL for a movie poster
+     */
+    public String getMoviePosterFullUrl() {
+        return String.format("%s%s", MOVIE_POSTER_ENDPOINT, mPosterPath);
     }
 
     /**
