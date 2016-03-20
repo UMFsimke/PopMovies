@@ -5,8 +5,10 @@
 package popmovies.udacity.com.model.api;
 
 import popmovies.udacity.com.model.api.response.MoviesResponse;
+import popmovies.udacity.com.model.beans.Movie;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -25,6 +27,11 @@ public interface MoviesApi {
     String POPULAR_API_ROUTE = "movie/popular";
 
     /**
+     * Endpoint for movie details
+     */
+    String MOVIE_DETAIL_API_ROUTE = "movie/{id}";
+
+    /**
      * API key query parameter name in URL request
      */
     String API_KEY_QUERY_PARAMETER_NAME = "api_key";
@@ -33,6 +40,11 @@ public interface MoviesApi {
      * Page query parameter name in URL request
      */
     String PAGE_QUERY_PARAMETER_NAME = "page";
+
+    /**
+     * Movie id parameter sub path in URL
+     */
+    String MOVIE_ID_PARAMETER_NAME = "id";
 
     /**
      * Definition of top rated movies endpoint route which gives as result
@@ -60,5 +72,18 @@ public interface MoviesApi {
     Call<MoviesResponse> getPopularMovies(
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey,
             @Query(PAGE_QUERY_PARAMETER_NAME) Integer page
+    );
+
+    /**
+     * Definition of movie's details endpoint route which gives as result
+     * {@link Call} that can be used for querying API for movie's details.
+     * @param movieId Movie id to load movie's details
+     * @param apiKey API key for TheMovieDb. API key is required parameter.
+     * @return {@link Call<Movie>} that can be initiated for querying API
+     */
+    @GET(MOVIE_DETAIL_API_ROUTE)
+    Call<Movie> getMovieDetails(
+            @Path(MOVIE_ID_PARAMETER_NAME) Integer movieId,
+            @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );
 }

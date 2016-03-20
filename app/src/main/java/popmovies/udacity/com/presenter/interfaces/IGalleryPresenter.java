@@ -19,4 +19,9 @@ public interface IGalleryPresenter extends IPresenter {
      * Invoked when user leaves the view and data should be cleared
      */
     void onDestroy();
+
+    /**
+     * Invoked when screen is resumed
+     */
+    void onScreenResumed();
 }

@@ -7,6 +7,9 @@ package popmovies.udacity.com.model.mappers;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
+import popmovies.udacity.com.model.beans.Genre;
 import popmovies.udacity.com.model.beans.Movie;
 
 /**
@@ -26,6 +29,8 @@ public class MovieMapper {
         parcel.writeString(movie.getPlotOverview());
         parcel.writeDouble(movie.getUserRating());
         parcel.writeString(movie.getReleaseDate());
+        parcel.writeInt(movie.getDuration());
+        parcel.writeTypedList(movie.getGenres());
     }
 
     /**
@@ -41,6 +46,10 @@ public class MovieMapper {
         movie.setPlotOverview(parcel.readString());
         movie.setUserRating(parcel.readDouble());
         movie.setReleaseDate(parcel.readString());
+        movie.setDuration(parcel.readInt());
+
+        List<Genre> genres = parcel.createTypedArrayList(Genre.CREATOR);
+        movie.setGenres(genres);
         return movie;
     }
 }

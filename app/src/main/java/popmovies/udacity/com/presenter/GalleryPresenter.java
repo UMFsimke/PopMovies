@@ -6,6 +6,9 @@ package popmovies.udacity.com.presenter;
 
 import android.os.Bundle;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import popmovies.udacity.com.model.api.ApiComponent;
 import popmovies.udacity.com.model.api.ApiModule;
 import popmovies.udacity.com.model.api.DaggerApiComponent;
@@ -68,7 +71,8 @@ public class GalleryPresenter implements IGalleryPresenter {
     }
 
     /**
-     * {@inheritDoc}
+     * Loads movies if screen is created or renders current if
+     * state is restored
      */
     @Override
     public void onScreenCreated() {
@@ -97,8 +101,6 @@ public class GalleryPresenter implements IGalleryPresenter {
     public void loadMoreMovies() {
         if (mView == null) return;
 
-        if (null != mApiCall) return;
-
         MoviesApi api = mApiComponent.moviesApiClient();
 
         switch (mSortBy) {
@@ -117,18 +119,30 @@ public class GalleryPresenter implements IGalleryPresenter {
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 if (null == mView) return;
 
-                mGallery.addMovies(response.body().getMoviesList());
-                mGallery.setLastLoadedPage(response.body().getCurrentPage());
-                mGallery.setHasMore(response.body().getCurrentPage() ==
-                        response.body().getLastPage());
+                if (response.isSuccess()) {
+                    mGallery.addMovies(response.body().getMoviesList());
+                    mGallery.setLastLoadedPage(response.body().getCurrentPage());
+                    mGallery.setHasMore(response.body().getCurrentPage() ==
+                            response.body().getLastPage());
 
-                mView.onGalleryUpdated(mGallery);
-                mApiCall = null;
+                    mView.onGalleryUpdated(mGallery);
+                    return;
+                }
+
+                mView.hideProgressBar();
+                mView.showServerErrorMessage();
             }
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                mApiCall = null;
+                if (mView == null) {
+                    return;
+                }
+
+                mView.hideProgressBar();
+                if (t instanceof UnknownHostException) {
+                    mView.showNoInternetConnection();
+                }
             }
         });
     }
@@ -164,5 +178,21 @@ public class GalleryPresenter implements IGalleryPresenter {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(EXTRA_GALLERY, mGallery);
+    }
+
+    /**
+     * When screen is resumed if gallery type is changed data should refresh
+     */
+    @Override
+    public void onScreenResumed() {
+        if (null == mView) return;
+
+        String settingsGalleryType = mView.getSettingsGalleryType();
+        Gallery.GalleryType savedGalleryType = Gallery.GalleryType.fromString(settingsGalleryType);
+        if (savedGalleryType.ordinal() != mSortBy.ordinal()) {
+            mRestoredState = false;
+            mView.onRefresh();
+            onScreenCreated();
+        }
     }
 }

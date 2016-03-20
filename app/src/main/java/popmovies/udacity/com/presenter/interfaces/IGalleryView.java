@@ -22,4 +22,26 @@ public interface IGalleryView {
      * @return Chosen gallery type to show
      */
     String getSettingsGalleryType();
+
+    /**
+     * Notifies screen that data will refresh
+     */
+    void onRefresh();
+
+    /**
+     * Invoked when API is not responding and message
+     * should be shown
+     */
+    void showServerErrorMessage();
+
+    /**
+     * Invoked when progress bar should be hidden
+     */
+    void hideProgressBar();
+
+    /**
+     * Invoked when there is no internet connection
+     * and user should be notified
+     */
+    void showNoInternetConnection();
 }

@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="activity_default_padding">16dp</dimen>
+    <dimen name="thumbnail_width">120dp</dimen>
+    <dimen name="thumbnail_height">185dp</dimen>
+    <dimen name="movie_details_empty_font_size">32sp</dimen>
 </resources>

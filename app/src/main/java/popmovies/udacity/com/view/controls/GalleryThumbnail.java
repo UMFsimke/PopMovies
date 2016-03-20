@@ -24,14 +24,23 @@ public class GalleryThumbnail extends ImageView {
      */
     private static final float THUMBNAIL_OPTIMAL_WIDTH = 185;
 
+    /**
+     * {@inheritDoc}
+     */
     public GalleryThumbnail(Context context) {
         super(context);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public GalleryThumbnail(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public GalleryThumbnail(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -47,6 +56,7 @@ public class GalleryThumbnail extends ImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = Math.round((width * THUMBNAIL_OPTIMAL_HEIGHT) / THUMBNAIL_OPTIMAL_WIDTH);
+
         setMeasuredDimension(width, height);
     }
 }

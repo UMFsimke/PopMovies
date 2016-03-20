@@ -9,6 +9,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import popmovies.udacity.com.model.mappers.MovieMapper;
 
 /**
@@ -51,10 +53,22 @@ public class Movie implements Parcelable {
     protected double mUserRating;
 
     /**
-     * Relase date
+     * Release date
      */
     @SerializedName("release_date")
     protected String mReleaseDate;
+
+    /**
+     * Duration of a movie
+     */
+    @SerializedName("runtime")
+    protected int mDuration;
+
+    /**
+     * Genres of a movie
+     */
+    @SerializedName("genres")
+    protected List<Genre> mGenres;
 
     public Movie() {
     }
@@ -107,12 +121,43 @@ public class Movie implements Parcelable {
         mReleaseDate = releaseDate;
     }
 
+    public List<Genre> getGenres() {
+        return mGenres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.mGenres = genres;
+    }
+
+    public int getDuration() {
+        return mDuration;
+    }
+
+    public void setDuration(int duration) {
+        this.mDuration = duration;
+    }
+
     /**
      * Returns full formatted URL string for movie poster
      * @return Full URL for a movie poster
      */
     public String getMoviePosterFullUrl() {
         return String.format("%s%s", MOVIE_POSTER_ENDPOINT, mPosterPath);
+    }
+
+    /**
+     * Returns names of genres as array of strings
+     * @return Array of genres names
+     */
+    public String[] getGenresAsStringArray() {
+        if (mGenres == null || mGenres.size() == 0) return null;
+
+        String[] genres = new String[mGenres.size()];
+        for (int i = 0; i < mGenres.size(); i++) {
+            genres[i] = mGenres.get(i).getName();
+        }
+
+        return genres;
     }
 
     /**

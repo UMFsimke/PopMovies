@@ -35,6 +35,8 @@ public class Gallery implements Parcelable {
         }
 
         public static GalleryType fromString(String ordinalString) {
+            if (ordinalString == null) return POPULAR;
+
             if ("top_rated".equals(ordinalString.toLowerCase(Locale.US))) {
                 return TOP_RATED;
             }

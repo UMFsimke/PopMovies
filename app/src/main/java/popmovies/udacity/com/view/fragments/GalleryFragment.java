@@ -15,8 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
-import java.util.List;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,14 +33,9 @@ import popmovies.udacity.com.view.controls.EndlessRecyclerOnScrollListener;
 public class GalleryFragment extends Fragment implements IGalleryView {
 
     /**
-     * Number of columns for tablet
+     * Number of columns
      */
-    private static final int TABLET_COLUMN_COUNT = 4;
-
-    /**
-     * Number of columns for phone
-     */
-    private static final int PHONE_COLUMN_COUNT = 3;
+    private static final int COLUMN_COUNT = 3;
 
     /**
      * Defining if view is shown on tablet or not
@@ -74,6 +68,9 @@ public class GalleryFragment extends Fragment implements IGalleryView {
     public GalleryFragment() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -100,18 +97,9 @@ public class GalleryFragment extends Fragment implements IGalleryView {
 
         ButterKnife.bind(this, rootView);
         initRecyclerView();
+        mPresenter.onScreenCreated();
 
         return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mScrollListener != null) {
-            mScrollListener.reset();
-        }
-
-        mPresenter.onScreenCreated();
     }
 
     /**
@@ -119,9 +107,7 @@ public class GalleryFragment extends Fragment implements IGalleryView {
      */
     protected void initRecyclerView() {
         //TODO: Implement autofit feature
-        int numOfColumns = mIsTabletPaneUi ? TABLET_COLUMN_COUNT : PHONE_COLUMN_COUNT;
-
-        GridLayoutManager manager = new GridLayoutManager(getContext(), numOfColumns);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), COLUMN_COUNT);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mGallery.setLayoutManager(manager);
 
@@ -134,6 +120,26 @@ public class GalleryFragment extends Fragment implements IGalleryView {
             }
         };
         mGallery.addOnScrollListener(mScrollListener);
+        mGallery.getRecycledViewPool().setMaxRecycledViews(0, 1000);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onRefresh() {
+        if (mScrollListener != null) {
+            mScrollListener.reset();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.onScreenResumed();
     }
 
     /**
@@ -177,9 +183,58 @@ public class GalleryFragment extends Fragment implements IGalleryView {
         mPresenter.onSaveInstanceState(outState);
     }
 
+    /**
+     * Returns settings gallery type saved in preferences
+     * @return Gallery type saved in preferences
+     */
     @Override
     public String getSettingsGalleryType() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         return prefs.getString(getString(R.string.pref_gallery_type_key), null);
+    }
+
+    /**
+     * Sets tablet mode
+     * @param tabletMode <b>true</b> if is tablet mode, <b>false</b> otherwise
+     */
+    public void setIsTabletMode(boolean tabletMode) {
+        mIsTabletPaneUi = tabletMode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showServerErrorMessage() {
+        Toast.makeText(getContext(),
+                R.string.api_experiencing_problems_message,
+                Toast.LENGTH_LONG)
+                .show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showNoInternetConnection() {
+        Toast.makeText(getContext(),
+                R.string.no_internet_connection_message,
+                Toast.LENGTH_LONG)
+                .show();
+    }
+
+    /**
+     * Refreshes content of screen
+     */
+    public void refresh() {
+        mPresenter.onScreenCreated();
     }
 }

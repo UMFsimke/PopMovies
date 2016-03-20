@@ -1,14 +1,16 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ */
+
 package popmovies.udacity.com.view.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import popmovies.udacity.com.R;
 
@@ -24,11 +26,25 @@ public class SettingsActivity  extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else if (getActionBar() != null){
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Intent getParentActivityIntent() {
-        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            super.onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public static class SettingsFragment extends PreferenceFragment
@@ -55,6 +71,11 @@ public class SettingsActivity  extends AppCompatActivity {
                             .getString(preference.getKey(), ""));
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * Saves gallery type preference that user chose
+         */
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
