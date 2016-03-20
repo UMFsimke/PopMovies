@@ -18,6 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activities.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".view.activities.PopMoviesActivity"
+            android:theme="@style/SettingsTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="popmovies.udacity.com.view.activities.PopMoviesActivity" />
+        </activity>
     </application>
 
 </manifest>

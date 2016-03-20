@@ -16,4 +16,10 @@ public interface IGalleryView {
      * @param gallery New gallery
      */
     void onGalleryUpdated(Gallery gallery);
+
+    /**
+     * Returns gallery type saved in settings shared preferences
+     * @return Chosen gallery type to show
+     */
+    String getSettingsGalleryType();
 }

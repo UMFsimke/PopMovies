@@ -74,7 +74,8 @@ public class GalleryPresenter implements IGalleryPresenter {
     public void onScreenCreated() {
         if (null == mView) return;
 
-        mSortBy = Gallery.GalleryType.POPULAR;
+        String settingsGalleryType = mView.getSettingsGalleryType();
+        mSortBy = Gallery.GalleryType.fromString(settingsGalleryType);
         mApiComponent = DaggerApiComponent.builder()
                 .apiModule(new ApiModule())
                 .build();
@@ -105,7 +106,7 @@ public class GalleryPresenter implements IGalleryPresenter {
                 mApiCall = api.getPopularMovies(Constants.API_KEY , mGallery.getNextPageToLoad());
                 break;
             case TOP_RATED:
-                api.getTopRatedMovies(Constants.API_KEY , mGallery.getNextPageToLoad());
+                mApiCall = api.getTopRatedMovies(Constants.API_KEY , mGallery.getNextPageToLoad());
                 break;
             default:
                 return;

@@ -70,4 +70,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
      * Invoked when loading more items is required
      */
     public abstract void onLoadMore();
+
+    public void reset() {
+        mPreviousTotal = 0;
+        mLoading = true;
+    }
 }

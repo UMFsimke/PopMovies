@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">PopMovies</string>
-    <string-array name="gallery_types">
-        <item>Popular</item>
-        <item>Top Rated</item>
-    </string-array>
+
+    <!-- Settings -->
+    <string name="pref_gallery_type_title">In gallery show</string>
+    <string name="prefs_popular_label">Popular</string>
+    <string name="prefs_top_rated_label">Top Rated</string>
+    <string name="prefs_popular_value" translatable="false">popular</string>
+    <string name="prefs_top_rated_value" translatable="false">top_rated</string>
+    <string name="pref_gallery_type_key" translatable="false">location</string>
+
+    <!-- Pop movies screen -->
+    <string name="action_settings">Settings</string>
 </resources>

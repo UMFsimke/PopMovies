@@ -4,7 +4,9 @@
 
 package popmovies.udacity.com.view.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,6 +65,11 @@ public class GalleryFragment extends Fragment implements IGalleryView {
      */
     protected IGalleryPresenter mPresenter;
 
+    /**
+     * Scroll listener for lazy loading
+     */
+    protected EndlessRecyclerOnScrollListener mScrollListener;
+
     //TODO: implement abstract fragment for presenter and interface of a view
     public GalleryFragment() {
     }
@@ -94,8 +101,17 @@ public class GalleryFragment extends Fragment implements IGalleryView {
         ButterKnife.bind(this, rootView);
         initRecyclerView();
 
-        mPresenter.onScreenCreated();
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mScrollListener != null) {
+            mScrollListener.reset();
+        }
+
+        mPresenter.onScreenCreated();
     }
 
     /**
@@ -108,14 +124,16 @@ public class GalleryFragment extends Fragment implements IGalleryView {
         GridLayoutManager manager = new GridLayoutManager(getContext(), numOfColumns);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mGallery.setLayoutManager(manager);
-        mGallery.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager) {
+
+        mScrollListener = new EndlessRecyclerOnScrollListener(manager) {
             @Override
             public void onLoadMore() {
                 if (mPresenter == null) return;
 
                 mPresenter.loadMoreMovies();
             }
-        });
+        };
+        mGallery.addOnScrollListener(mScrollListener);
     }
 
     /**
@@ -157,5 +175,11 @@ public class GalleryFragment extends Fragment implements IGalleryView {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mPresenter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public String getSettingsGalleryType() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        return prefs.getString(getString(R.string.pref_gallery_type_key), null);
     }
 }

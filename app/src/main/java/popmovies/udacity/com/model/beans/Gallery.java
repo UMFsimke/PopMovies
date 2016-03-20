@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import popmovies.udacity.com.model.mappers.GalleryMapper;
 
@@ -22,8 +23,7 @@ public class Gallery implements Parcelable {
      */
     public enum GalleryType {
         POPULAR,
-        TOP_RATED,
-        UNDEFINED;
+        TOP_RATED;
 
         /**
          * Returns {@link GalleryType} for given ordinal
@@ -32,6 +32,14 @@ public class Gallery implements Parcelable {
          */
         public static GalleryType fromOrdinal(int ordinal) {
             return values()[ordinal];
+        }
+
+        public static GalleryType fromString(String ordinalString) {
+            if ("top_rated".equals(ordinalString.toLowerCase(Locale.US))) {
+                return TOP_RATED;
+            }
+
+            return POPULAR;
         }
     }
 
@@ -59,7 +67,7 @@ public class Gallery implements Parcelable {
      * Creates single instance of a gallery.
      */
     public Gallery() {
-        mGalleryType = GalleryType.UNDEFINED;
+        mGalleryType = GalleryType.POPULAR;
         mHasMore = true;
         mLastLoadedPage = -1;
     }
