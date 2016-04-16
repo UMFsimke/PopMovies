@@ -154,9 +154,7 @@ public class MovieDetailsPresenter implements IMovieDetailsPresenter {
         mView.setMovieOverview(mMovie.getPlotOverview());
         mView.loadThumbnailUrl(mMovie.getMoviePosterFullUrl());
 
-        mView.setMovieDetails(mMovie.getDuration(),
-                mMovie.getGenresAsStringArray(),
-                mMovie.getReleaseDate(),
+        mView.setMovieDetails(mMovie.getReleaseDate(),
                 mMovie.getUserRating());
     }
 

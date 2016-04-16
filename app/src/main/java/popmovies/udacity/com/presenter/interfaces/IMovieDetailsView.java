@@ -17,12 +17,10 @@ public interface IMovieDetailsView {
 
     /**
      * Renders movie details
-     * @param duration Duration of movie
-     * @param genres Movie's genres
      * @param releaseDate Release date
      * @param rating Rating
      */
-    void setMovieDetails(int duration, String[] genres, String releaseDate, double rating);
+    void setMovieDetails(String releaseDate, double rating);
 
     /**
      * Renders movie overview

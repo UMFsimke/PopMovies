@@ -21,11 +21,9 @@
     <!-- Movie details screen -->
     <string name="title_activity_detail">Movie Details</string>
     <string name="select_movie_to_see_details">Select a movie to see its details</string>
-    <string name="duration_not_defined">Duration unknown</string>
-    <string name="genres_not_defined">Genre unknown</string>
     <string name="date_not_defined">Release date unknown</string>
     <string name="rating_not_defined">Rating unknown</string>
     <string name="movie_doesnt_exists">Chosen movie does not contains details</string>
     <string name="movie_poster_description">Movie poster</string>
-    <string name="format_movie_details">Runtime: <xliff:g id="runtime">%1$s</xliff:g> minutes | <xliff:g id="genres">%2$s</xliff:g> | Released on: <xliff:g id="released_on">%3$s</xliff:g> | Rating: <xliff:g id="rating">%4$s</xliff:g>/10</string>
+    <string name="format_movie_details">Released on: <xliff:g id="released_on">%1$s</xliff:g> | Rating: <xliff:g id="rating">%2$s</xliff:g>/10</string>
 </resources>

@@ -144,28 +144,7 @@ public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
      * {@inheritDoc}
      */
     @Override
-    public void setMovieDetails(int duration, String[] genres, String releaseDate, double rating) {
-        String genresString = null;
-        if (genres != null && genres.length > 0) {
-            String formatPattern = "";
-            for (int i = 0; i < genres.length; i++) {
-                formatPattern += "%s";
-                if (i < genres.length-1) {
-                    formatPattern += ", ";
-                }
-            }
-
-            genresString = String.format(formatPattern, genres);
-        }
-
-        String durationString = duration == 0 ?
-                getString(R.string.duration_not_defined) :
-                String.valueOf(duration);
-
-        genresString = TextUtils.isEmpty(genresString) ?
-                getString(R.string.genres_not_defined) :
-                genresString;
-
+    public void setMovieDetails(String releaseDate, double rating) {
         String releaseDateString = TextUtils.isEmpty(releaseDate) ?
                 getString(R.string.date_not_defined) :
                 releaseDate;
@@ -175,8 +154,6 @@ public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
                 String.valueOf(rating);
         String movieInfo = String.format(
                 getString(R.string.format_movie_details),
-                durationString,
-                genresString,
                 releaseDateString,
                 ratingString);
 

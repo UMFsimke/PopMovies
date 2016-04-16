@@ -5,9 +5,10 @@
 package popmovies.udacity.com.model.database;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import popmovies.udacity.com.model.beans.Gallery;
 
 /**
  * Defines table and column names for the movie database.
@@ -138,6 +139,89 @@ public class MovieContract {
             }
 
             return 0;
+        }
+    }
+
+    /**
+     * Defines table contents of the video table
+     */
+    public static final class MovieEntry implements BaseColumns {
+
+        /**
+         * Content URI
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+
+        /**
+         * Table name
+         */
+        public static final String TABLE_NAME = "movie";
+
+        /**
+         * Title column
+         */
+        public static final String COLUMN_TITLE = "title";
+
+        /**
+         * Poster path column
+         */
+        public static final String COLUMN_POSTER_PATH = "poster_path";
+
+        /**
+         * Overview column
+         */
+        public static final String COLUMN_OVERVIEW = "overview";
+
+        /**
+         * User rating column
+         */
+        public static final String COLUMN_USER_RATING = "user_rating";
+
+        /**
+         * Release date column
+         */
+        public static final String COLUMN_RELEASE_DATE = "release_date";
+
+        /**
+         * Popular order index column
+         */
+        public static final String COLUMN_POPULAR_INDEX = "popular_index";
+
+        /**
+         * Top rated order index column
+         */
+        public static final String COLUMN_TOP_RATED_INDEX = "top_rated_index";
+
+        /**
+         * Favorite order index column
+         */
+        public static final String COLUMN_FAVORITE_INDEX = "favorite_index";
+
+        /**
+         * Sort by query parameter
+         */
+        private static final String SORT_TYPE_PARAMETER = "sort_by";
+
+        public static Uri buildMoviesWithType(Gallery.GalleryType galleryType) {
+            String galleryTypeParameterValue = Integer.toString(galleryType.ordinal());
+            return CONTENT_URI.buildUpon()
+                    .appendQueryParameter(SORT_TYPE_PARAMETER, galleryTypeParameterValue).build();
+        }
+
+        public static Gallery.GalleryType getSortByFromUri(Uri uri) {
+            String galleryTypeParameterValue = uri.getQueryParameter(SORT_TYPE_PARAMETER);
+            if (null != galleryTypeParameterValue && galleryTypeParameterValue.length() > 0) {
+                int galleryTypeOrdinal = Integer.parseInt(galleryTypeParameterValue);
+                return Gallery.GalleryType.fromOrdinal(galleryTypeOrdinal);
+            }
+
+            return Gallery.GalleryType.POPULAR;
         }
     }
 }

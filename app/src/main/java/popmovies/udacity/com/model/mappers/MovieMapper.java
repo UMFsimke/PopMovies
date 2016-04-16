@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import popmovies.udacity.com.model.beans.Genre;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.model.beans.Review;
 import popmovies.udacity.com.model.beans.Video;
@@ -25,16 +24,17 @@ public class MovieMapper {
      * @param movie Movie object
      */
     public static void writeToParcel(@NonNull Parcel parcel, @NonNull Movie movie) {
-        parcel.writeInt(movie.getId());
+        parcel.writeLong(movie.getId());
         parcel.writeString(movie.getTitle());
         parcel.writeString(movie.getPosterPath());
         parcel.writeString(movie.getPlotOverview());
         parcel.writeDouble(movie.getUserRating());
         parcel.writeString(movie.getReleaseDate());
-        parcel.writeInt(movie.getDuration());
-        parcel.writeTypedList(movie.getGenres());
         parcel.writeTypedList(movie.getReviews());
         parcel.writeTypedList(movie.getVideos());
+        parcel.writeInt(movie.getPopularIndex());
+        parcel.writeInt(movie.getTopRatedIndex());
+        parcel.writeInt(movie.getFavoriteIndex());
     }
 
     /**
@@ -44,22 +44,27 @@ public class MovieMapper {
      */
     public static Movie constructFromParcel(@NonNull Parcel parcel) {
         Movie movie = new Movie();
-        movie.setId(parcel.readInt());
+        movie.setId(parcel.readLong());
         movie.setTitle(parcel.readString());
         movie.setPosterPath(parcel.readString());
         movie.setPlotOverview(parcel.readString());
         movie.setUserRating(parcel.readDouble());
         movie.setReleaseDate(parcel.readString());
-        movie.setDuration(parcel.readInt());
-
-        List<Genre> genres = parcel.createTypedArrayList(Genre.CREATOR);
-        movie.setGenres(genres);
 
         List<Review> reviews = parcel.createTypedArrayList(Review.CREATOR);
         movie.setReviews(reviews);
 
         List<Video> videos = parcel.createTypedArrayList(Video.CREATOR);
         movie.setVideos(videos);
+
+        int order = parcel.readInt();
+        movie.setPopularIndex(order == -1 ? null : order);
+
+        order = parcel.readInt();
+        movie.setTopRatedIndex(order == -1 ? null : order);
+
+        order = parcel.readInt();
+        movie.setFavoriteIndex(order == -1 ? null : order);
         return movie;
     }
 }

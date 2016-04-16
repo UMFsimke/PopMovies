@@ -26,7 +26,7 @@ public class Movie implements Parcelable {
      * Id
      */
     @SerializedName("id")
-    protected int mId;
+    protected long mId;
 
     /**
      * Title
@@ -59,18 +59,6 @@ public class Movie implements Parcelable {
     protected String mReleaseDate;
 
     /**
-     * Duration of a movie
-     */
-    @SerializedName("runtime")
-    protected int mDuration;
-
-    /**
-     * Genres of a movie
-     */
-    @SerializedName("genres")
-    protected List<Genre> mGenres;
-
-    /**
      * Reviews of a movie
      */
     protected List<Review> mReviews;
@@ -80,14 +68,29 @@ public class Movie implements Parcelable {
      */
     protected List<Video> mVideos;
 
+    /**
+     * Defines order index in popular list for a movie
+     */
+    protected Integer mPopularIndex;
+
+    /**
+     * Defines order index in top rated list for a movie
+     */
+    protected Integer mTopRatedIndex;
+
+    /**
+     * Defines order index in favorite list for a movie
+     */
+    protected Integer mFavoriteIndex;
+
     public Movie() {
     }
 
-    public int getId() {
+    public long getId() {
         return mId;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         mId = id;
     }
 
@@ -131,43 +134,12 @@ public class Movie implements Parcelable {
         mReleaseDate = releaseDate;
     }
 
-    public List<Genre> getGenres() {
-        return mGenres;
-    }
-
-    public void setGenres(List<Genre> genres) {
-        this.mGenres = genres;
-    }
-
-    public int getDuration() {
-        return mDuration;
-    }
-
-    public void setDuration(int duration) {
-        this.mDuration = duration;
-    }
-
     /**
      * Returns full formatted URL string for movie poster
      * @return Full URL for a movie poster
      */
     public String getMoviePosterFullUrl() {
         return String.format("%s%s", MOVIE_POSTER_ENDPOINT, mPosterPath);
-    }
-
-    /**
-     * Returns names of genres as array of strings
-     * @return Array of genres names
-     */
-    public String[] getGenresAsStringArray() {
-        if (mGenres == null || mGenres.size() == 0) return null;
-
-        String[] genres = new String[mGenres.size()];
-        for (int i = 0; i < mGenres.size(); i++) {
-            genres[i] = mGenres.get(i).getName();
-        }
-
-        return genres;
     }
 
     public void setReviews(List<Review> reviews) {
@@ -184,6 +156,45 @@ public class Movie implements Parcelable {
 
     public List<Video> getVideos() {
         return mVideos;
+    }
+
+    public void setPopularIndex(Integer popularIndex) {
+        mPopularIndex = popularIndex;
+    }
+
+    /**
+     * Returns order index in popular list for a movie.
+     * @return Order index for a movie in popular list. If movie is not
+     * in popular list -1 will be returned
+     */
+    public int getPopularIndex() {
+        return mPopularIndex == null ? -1 : mPopularIndex;
+    }
+
+    public void setTopRatedIndex(Integer topRatedIndex) {
+        mTopRatedIndex = topRatedIndex;
+    }
+
+    /**
+     * Returns order index in top rated list for a movie.
+     * @return Order index for a movie in top rated list. If movie is not
+     * in top rated list -1 will be returned
+     */
+    public int getTopRatedIndex() {
+        return mTopRatedIndex == null ? -1 : mTopRatedIndex;
+    }
+
+    public void setFavoriteIndex(Integer favoriteIndex) {
+        mFavoriteIndex = favoriteIndex;
+    }
+
+    /**
+     * Returns order index in favorite list for a movie.
+     * @return Order index for a movie in favorite list. If movie is not
+     * in favorite list -1 will be returned
+     */
+    public int getFavoriteIndex() {
+        return mFavoriteIndex == null ? -1 : mFavoriteIndex;
     }
 
     /**
