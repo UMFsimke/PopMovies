@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ */
+
+package popmovies.udacity.com.model.database;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import popmovies.udacity.com.model.database.MovieContract.ReviewEntry;
+import popmovies.udacity.com.model.database.MovieContract.VideoEntry;
+import popmovies.udacity.com.model.database.MovieContract.MovieEntry;
+
+/**
+ * Manages a local database for movie data.
+ */
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    /**
+     * Database version
+     */
+    private static final int DATABASE_VERSION = 1;
+
+    /**
+     * Database name
+     */
+    private static final String DATABASE_NAME = "popmovies.db";
+
+    /**
+     * Create movie table query
+     */
+    private final static String CREATE_MOVIE_TABLE_QUERY =
+            "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
+                    MovieEntry._ID + " INTEGER PRIMARY KEY," +
+                    MovieEntry.COLUMN_TITLE + " TEXT, " +
+                    MovieEntry.COLUMN_POSTER_PATH + " TEXT, " +
+                    MovieEntry.COLUMN_OVERVIEW + " TEXT, " +
+                    MovieEntry.COLUMN_USER_RATING + " REAL, " +
+                    MovieEntry.COLUMN_RELEASE_DATE + " TEXT, " +
+                    MovieEntry.COLUMN_POPULAR_INDEX + " INTEGER NOT NULL, " +
+                    MovieEntry.COLUMN_TOP_RATED_INDEX + " INTEGER NOT NULL, " +
+                    MovieEntry.COLUMN_FAVORITE_INDEX + " INTEGER NOT NULL, " +
+                    " UNIQUE (" + MovieEntry._ID + ") ON CONFLICT REPLACE);";
+
+    /**
+     * Create video table query
+     */
+    //TODO: add API keys
+    private final static String CREATE_VIDEO_TABLE_QUERY =
+            "CREATE TABLE " + VideoEntry.TABLE_NAME + " (" +
+                    VideoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    VideoEntry.COLUMN_NAME + " TEXT, " +
+                    VideoEntry.COLUMN_YOUTUBE_KEY + " TEXT, " +
+                    VideoEntry.COLUMN_MOVIE_ID + " INTEGER, " +
+                    " FOREIGN KEY (" + VideoEntry.COLUMN_MOVIE_ID+ ") REFERENCES " +
+                    MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
+                    " UNIQUE (" + VideoEntry._ID + ", " +
+                    VideoEntry.COLUMN_YOUTUBE_KEY + ") ON CONFLICT REPLACE);";
+
+    /**
+     * Create review table query
+     */
+    //TODO: add API keys
+    private final static String CREATE_REVIEW_TABLE_QUERY =
+            "CREATE TABLE " + VideoEntry.TABLE_NAME + " (" +
+                    ReviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    ReviewEntry.COLUMN_AUTHOR + " TEXT, " +
+                    ReviewEntry.COLUMN_CONTENT + " TEXT, " +
+                    ReviewEntry.COLUMN_MOVIE_ID + " INTEGER, " +
+                    " FOREIGN KEY (" + ReviewEntry.COLUMN_MOVIE_ID+ ") REFERENCES " +
+                    MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
+                    " UNIQUE (" + ReviewEntry._ID + ") ON CONFLICT REPLACE);";
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL(CREATE_MOVIE_TABLE_QUERY);
+        sqLiteDatabase.execSQL(CREATE_REVIEW_TABLE_QUERY);
+        sqLiteDatabase.execSQL(CREATE_VIDEO_TABLE_QUERY);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ReviewEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + VideoEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
+    }
+}
