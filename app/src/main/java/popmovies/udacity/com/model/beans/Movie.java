@@ -70,6 +70,11 @@ public class Movie implements Parcelable {
     @SerializedName("genres")
     protected List<Genre> mGenres;
 
+    /**
+     * Reviews of a movie
+     */
+    protected List<Review> mReviews;
+
     public Movie() {
     }
 
@@ -158,6 +163,14 @@ public class Movie implements Parcelable {
         }
 
         return genres;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        mReviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return mReviews;
     }
 
     /**

@@ -11,6 +11,7 @@ import java.util.List;
 
 import popmovies.udacity.com.model.beans.Genre;
 import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.model.beans.Review;
 
 /**
  * Defines set of static methods used to create and map {@link Movie}
@@ -31,6 +32,7 @@ public class MovieMapper {
         parcel.writeString(movie.getReleaseDate());
         parcel.writeInt(movie.getDuration());
         parcel.writeTypedList(movie.getGenres());
+        parcel.writeTypedList(movie.getReviews());
     }
 
     /**
@@ -50,6 +52,9 @@ public class MovieMapper {
 
         List<Genre> genres = parcel.createTypedArrayList(Genre.CREATOR);
         movie.setGenres(genres);
+
+        List<Review> reviews = parcel.createTypedArrayList(Review.CREATOR);
+        movie.setReviews(reviews);
         return movie;
     }
 }
