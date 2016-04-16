@@ -75,6 +75,11 @@ public class Movie implements Parcelable {
      */
     protected List<Review> mReviews;
 
+    /**
+     * Videos of a movie
+     */
+    protected List<Video> mVideos;
+
     public Movie() {
     }
 
@@ -171,6 +176,14 @@ public class Movie implements Parcelable {
 
     public List<Review> getReviews() {
         return mReviews;
+    }
+
+    public void setVideos(List<Video> videos) {
+        mVideos = videos;
+    }
+
+    public List<Video> getVideos() {
+        return mVideos;
     }
 
     /**

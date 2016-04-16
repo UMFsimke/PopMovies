@@ -15,12 +15,21 @@ import popmovies.udacity.com.model.beans.Movie;
  */
 public class MoviesResponse {
 
+    /**
+     * Total number of pages
+     */
     @SerializedName("total_pages")
     int mLastPage;
 
+    /**
+     * Current page
+     */
     @SerializedName("page")
     int mCurrentPage;
 
+    /**
+     * List of movies
+     */
     @SerializedName("results")
     List<Movie> mMoviesList;
 

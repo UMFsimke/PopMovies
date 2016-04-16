@@ -5,6 +5,8 @@
 package popmovies.udacity.com.model.api;
 
 import popmovies.udacity.com.model.api.response.MoviesResponse;
+import popmovies.udacity.com.model.api.response.ReviewsResponse;
+import popmovies.udacity.com.model.api.response.VideosResponse;
 import popmovies.udacity.com.model.beans.Movie;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -30,6 +32,16 @@ public interface MoviesApi {
      * Endpoint for movie details
      */
     String MOVIE_DETAIL_API_ROUTE = "movie/{id}";
+
+    /**
+     * Endpoint for movie reviews
+     */
+    String MOVIE_REVIEWS_API_ROUTE = "movie/{id}/reviews";
+
+    /**
+     * Endpoint for movie videos
+     */
+    String MOVIE_VIDEOS_API_ROUTE = "movie/{id}/videos";
 
     /**
      * API key query parameter name in URL request
@@ -83,6 +95,32 @@ public interface MoviesApi {
      */
     @GET(MOVIE_DETAIL_API_ROUTE)
     Call<Movie> getMovieDetails(
+            @Path(MOVIE_ID_PARAMETER_NAME) Integer movieId,
+            @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
+    );
+
+    /**
+     * Definition of movie's reviews endpoint route which gives as result
+     * {@link Call} that can be used for querying API for movie's reviews.
+     * @param movieId Movie id to load movie's reviews
+     * @param apiKey API key for TheMovieDb. API key is required parameter.
+     * @return {@link Call<ReviewsResponse>} that can be initiated for querying API
+     */
+    @GET(MOVIE_REVIEWS_API_ROUTE)
+    Call<ReviewsResponse> getMovieReviews(
+            @Path(MOVIE_ID_PARAMETER_NAME) Integer movieId,
+            @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
+    );
+
+    /**
+     * Definition of movie's videos endpoint route which gives as result
+     * {@link Call} that can be used for querying API for movie's videos.
+     * @param movieId Movie id to load movie's videos
+     * @param apiKey API key for TheMovieDb. API key is required parameter.
+     * @return {@link Call<VideosResponse>} that can be initiated for querying API
+     */
+    @GET(MOVIE_VIDEOS_API_ROUTE)
+    Call<VideosResponse> getMovieVideos(
             @Path(MOVIE_ID_PARAMETER_NAME) Integer movieId,
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );
