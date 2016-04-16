@@ -7,8 +7,6 @@ package popmovies.udacity.com.model.mappers;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import java.util.List;
-
 import popmovies.udacity.com.model.beans.Review;
 
 /**
@@ -22,9 +20,10 @@ public class ReviewMapper {
      * @param review Review object
      */
     public static void writeToParcel(@NonNull Parcel parcel, @NonNull Review review) {
-        //TODO: add id
+        parcel.writeLong(review.getId());
         parcel.writeString(review.getAuthor());
         parcel.writeString(review.getContent());
+        parcel.writeLong(review.getMovieId());
     }
 
     /**
@@ -34,8 +33,10 @@ public class ReviewMapper {
      */
     public static Review constructFromParcel(@NonNull Parcel parcel) {
         Review review = new Review();
+        review.setId(parcel.readLong());
         review.setAuthor(parcel.readString());
         review.setContent(parcel.readString());
+        review.setMovieId(parcel.readLong());
         return review;
     }
 }

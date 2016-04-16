@@ -17,6 +17,11 @@ import popmovies.udacity.com.model.mappers.ReviewMapper;
 public class Review implements Parcelable {
 
     /**
+     * Local database ID
+     */
+    protected long mId;
+
+    /**
      * Author of review
      */
     @SerializedName("author")
@@ -28,7 +33,20 @@ public class Review implements Parcelable {
     @SerializedName("content")
     protected String mContent;
 
+    /**
+     * Local database movie ID
+     */
+    protected long mMovieId;
+
     public Review() {
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public void setAuthor(String author) {
@@ -45,6 +63,14 @@ public class Review implements Parcelable {
 
     public String getContent() {
         return mContent;
+    }
+
+    public void setMovieId(long movieId) {
+        mMovieId = movieId;
+    }
+
+    public long getMovieId() {
+        return mMovieId;
     }
 
     /**
