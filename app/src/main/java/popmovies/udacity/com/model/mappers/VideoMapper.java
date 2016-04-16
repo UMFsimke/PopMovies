@@ -20,9 +20,10 @@ public class VideoMapper {
      * @param video Video object
      */
     public static void writeToParcel(@NonNull Parcel parcel, @NonNull Video video) {
-        //TODO: add id
+        parcel.writeLong(video.getId());
         parcel.writeString(video.getName());
         parcel.writeString(video.getYoutubeKey());
+        parcel.writeLong(video.getMovieId());
     }
 
     /**
@@ -32,8 +33,10 @@ public class VideoMapper {
      */
     public static Video constructFromParcel(@NonNull Parcel parcel) {
         Video video = new Video();
+        video.setId(parcel.readLong());
         video.setName(parcel.readString());
         video.setYoutubeKey(parcel.readString());
+        video.setMovieId(parcel.readLong());
         return video;
     }
 }

@@ -89,4 +89,55 @@ public class MovieContract {
             return 0;
         }
     }
+
+    /**
+     * Defines table contents of the video table
+     */
+    public static final class VideoEntry implements BaseColumns {
+
+        /**
+         * Content URI
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_VIDEO).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIDEO;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIDEO;
+
+        /**
+         * Table name
+         */
+        public static final String TABLE_NAME = "video";
+
+        /**
+         * Name column
+         */
+        public static final String COLUMN_NAME = "name";
+
+        /**
+         * Youtube key column
+         */
+        public static final String COLUMN_YOUTUBE_KEY = "youtube_key";
+
+        /**
+         * Column for foreign movie ID key
+         */
+        public static final String COLUMN_MOVIE_ID = "movie_id";
+
+        public static Uri buildVideosWithMovieId(long movieId) {
+            return CONTENT_URI.buildUpon()
+                    .appendQueryParameter(COLUMN_MOVIE_ID, Long.toString(movieId)).build();
+        }
+
+        public static long getMovieIdFromUri(Uri uri) {
+            String movieId = uri.getQueryParameter(COLUMN_MOVIE_ID);
+            if (null != movieId && movieId.length() > 0) {
+                return Long.parseLong(movieId);
+            }
+
+            return 0;
+        }
+    }
 }

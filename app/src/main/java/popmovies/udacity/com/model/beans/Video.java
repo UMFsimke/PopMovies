@@ -16,13 +16,37 @@ import popmovies.udacity.com.model.mappers.VideoMapper;
  */
 public class Video implements Parcelable {
 
+    /**
+     * Local database ID
+     */
+    protected long mId;
+
+    /**
+     * Name of video
+     */
     @SerializedName("name")
     protected String mName;
 
+    /**
+     * Youtube key
+     */
     @SerializedName("key")
     protected String mYoutubeKey;
 
+    /**
+     * Local database movie ID
+     */
+    protected long mMovieId;
+
     public Video() {
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public void setName(String name) {
@@ -39,6 +63,14 @@ public class Video implements Parcelable {
 
     public String getYoutubeKey() {
         return mYoutubeKey;
+    }
+
+    public void setMovieId(long movieId) {
+        mMovieId = movieId;
+    }
+
+    public long getMovieId() {
+        return mMovieId;
     }
 
     /**
