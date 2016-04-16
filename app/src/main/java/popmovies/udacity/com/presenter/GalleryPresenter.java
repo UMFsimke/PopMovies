@@ -120,7 +120,7 @@ public class GalleryPresenter implements IGalleryPresenter {
                 if (null == mView) return;
 
                 if (response.isSuccess()) {
-                    mGallery.addMovies(response.body().getMoviesList());
+                    mGallery.addMovies(response.body().getResults());
                     mGallery.setLastLoadedPage(response.body().getCurrentPage());
                     mGallery.setHasMore(response.body().getCurrentPage() ==
                             response.body().getLastPage());

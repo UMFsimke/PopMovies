@@ -6,14 +6,12 @@ package popmovies.udacity.com.model.api.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import popmovies.udacity.com.model.beans.Video;
 
 /**
  * Abstraction of an TheMovieDb API response when querying for list of movie's videos.
  */
-public class VideosResponse {
+public class VideosResponse extends BaseResponse<Video> {
 
     /**
      * Movie ID
@@ -21,20 +19,11 @@ public class VideosResponse {
     @SerializedName("id")
     String mMovieId;
 
-    /**
-     * List of vides
-     */
-    @SerializedName("results")
-    List<Video> mResults;
-
     public VideosResponse() {
+        super();
     }
 
     public String getMovieId() {
         return mMovieId;
-    }
-
-    public List<Video> getVideos() {
-        return mResults;
     }
 }

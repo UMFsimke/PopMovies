@@ -6,14 +6,12 @@ package popmovies.udacity.com.model.api.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import popmovies.udacity.com.model.beans.Review;
 
 /**
  * Abstraction of an TheMovieDb API response when querying for list of reviews for a movie.
  */
-public class ReviewsResponse {
+public class ReviewsResponse extends BasePaginatedResponse<Review> {
 
     /**
      * Movie id
@@ -21,40 +19,11 @@ public class ReviewsResponse {
     @SerializedName("id")
     String mMovieId;
 
-    /**
-     * Current page
-     */
-    @SerializedName("page")
-    int mCurrentPage;
-
-    /**
-     * List of reviews
-     */
-    @SerializedName("results")
-    List<Review> mResults;
-
-    /**
-     * Total number of pages
-     */
-    @SerializedName("total_pages")
-    int mTotalPages;
-
     public ReviewsResponse() {
+        super();
     }
 
     public String getMovieId() {
         return mMovieId;
-    }
-
-    public int getCurrentPage() {
-        return mCurrentPage;
-    }
-
-    public List<Review> getReviews() {
-        return mResults;
-    }
-
-    public int getTotalPages() {
-        return mTotalPages;
     }
 }
