@@ -189,21 +189,6 @@ public class MovieContract {
         public static final String COLUMN_RELEASE_DATE = "release_date";
 
         /**
-         * Popular order index column
-         */
-        public static final String COLUMN_POPULAR_INDEX = "popular_index";
-
-        /**
-         * Top rated order index column
-         */
-        public static final String COLUMN_TOP_RATED_INDEX = "top_rated_index";
-
-        /**
-         * Favorite order index column
-         */
-        public static final String COLUMN_FAVORITE_INDEX = "favorite_index";
-
-        /**
          * Sort by query parameter
          */
         private static final String SORT_TYPE_PARAMETER = "sort_by";

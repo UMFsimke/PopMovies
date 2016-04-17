@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Create movie table query
      */
-    private final static String CREATE_MOVIE_TABLE_QUERY =
+    private final static String CREATE_FAVORITE_MOVIES_TABLE_QUERY =
             "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                     MovieEntry._ID + " INTEGER PRIMARY KEY," +
                     MovieEntry.COLUMN_TITLE + " TEXT, " +
@@ -38,9 +38,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     MovieEntry.COLUMN_OVERVIEW + " TEXT, " +
                     MovieEntry.COLUMN_USER_RATING + " REAL, " +
                     MovieEntry.COLUMN_RELEASE_DATE + " TEXT, " +
-                    MovieEntry.COLUMN_POPULAR_INDEX + " INTEGER NOT NULL, " +
-                    MovieEntry.COLUMN_TOP_RATED_INDEX + " INTEGER NOT NULL, " +
-                    MovieEntry.COLUMN_FAVORITE_INDEX + " INTEGER NOT NULL, " +
                     " UNIQUE (" + MovieEntry._ID + ") ON CONFLICT REPLACE);";
 
     /**
@@ -78,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_MOVIE_TABLE_QUERY);
+        sqLiteDatabase.execSQL(CREATE_FAVORITE_MOVIES_TABLE_QUERY);
         sqLiteDatabase.execSQL(CREATE_REVIEW_TABLE_QUERY);
         sqLiteDatabase.execSQL(CREATE_VIDEO_TABLE_QUERY);
     }

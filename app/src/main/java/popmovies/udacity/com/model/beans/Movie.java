@@ -68,21 +68,6 @@ public class Movie implements Parcelable {
      */
     protected List<Video> mVideos;
 
-    /**
-     * Defines order index in popular list for a movie
-     */
-    protected Integer mPopularIndex;
-
-    /**
-     * Defines order index in top rated list for a movie
-     */
-    protected Integer mTopRatedIndex;
-
-    /**
-     * Defines order index in favorite list for a movie
-     */
-    protected Integer mFavoriteIndex;
-
     public Movie() {
     }
 
@@ -156,45 +141,6 @@ public class Movie implements Parcelable {
 
     public List<Video> getVideos() {
         return mVideos;
-    }
-
-    public void setPopularIndex(Integer popularIndex) {
-        mPopularIndex = popularIndex;
-    }
-
-    /**
-     * Returns order index in popular list for a movie.
-     * @return Order index for a movie in popular list. If movie is not
-     * in popular list -1 will be returned
-     */
-    public int getPopularIndex() {
-        return mPopularIndex == null ? -1 : mPopularIndex;
-    }
-
-    public void setTopRatedIndex(Integer topRatedIndex) {
-        mTopRatedIndex = topRatedIndex;
-    }
-
-    /**
-     * Returns order index in top rated list for a movie.
-     * @return Order index for a movie in top rated list. If movie is not
-     * in top rated list -1 will be returned
-     */
-    public int getTopRatedIndex() {
-        return mTopRatedIndex == null ? -1 : mTopRatedIndex;
-    }
-
-    public void setFavoriteIndex(Integer favoriteIndex) {
-        mFavoriteIndex = favoriteIndex;
-    }
-
-    /**
-     * Returns order index in favorite list for a movie.
-     * @return Order index for a movie in favorite list. If movie is not
-     * in favorite list -1 will be returned
-     */
-    public int getFavoriteIndex() {
-        return mFavoriteIndex == null ? -1 : mFavoriteIndex;
     }
 
     /**

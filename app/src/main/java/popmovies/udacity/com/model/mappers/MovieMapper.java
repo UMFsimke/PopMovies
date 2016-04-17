@@ -32,9 +32,6 @@ public class MovieMapper {
         parcel.writeString(movie.getReleaseDate());
         parcel.writeTypedList(movie.getReviews());
         parcel.writeTypedList(movie.getVideos());
-        parcel.writeInt(movie.getPopularIndex());
-        parcel.writeInt(movie.getTopRatedIndex());
-        parcel.writeInt(movie.getFavoriteIndex());
     }
 
     /**
@@ -56,15 +53,6 @@ public class MovieMapper {
 
         List<Video> videos = parcel.createTypedArrayList(Video.CREATOR);
         movie.setVideos(videos);
-
-        int order = parcel.readInt();
-        movie.setPopularIndex(order == -1 ? null : order);
-
-        order = parcel.readInt();
-        movie.setTopRatedIndex(order == -1 ? null : order);
-
-        order = parcel.readInt();
-        movie.setFavoriteIndex(order == -1 ? null : order);
         return movie;
     }
 }
