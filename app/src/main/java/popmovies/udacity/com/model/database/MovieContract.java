@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.database;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -81,13 +82,12 @@ public class MovieContract {
                     .appendQueryParameter(COLUMN_MOVIE_ID, Long.toString(movieId)).build();
         }
 
-        public static long getMovieIdFromUri(Uri uri) {
-            String movieId = uri.getQueryParameter(COLUMN_MOVIE_ID);
-            if (null != movieId && movieId.length() > 0) {
-                return Long.parseLong(movieId);
-            }
+        public static String getMovieIdFromUri(Uri uri) {
+            return uri.getQueryParameter(COLUMN_MOVIE_ID);
+        }
 
-            return 0;
+        public static Uri buildReviewUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 
@@ -132,13 +132,12 @@ public class MovieContract {
                     .appendQueryParameter(COLUMN_MOVIE_ID, Long.toString(movieId)).build();
         }
 
-        public static long getMovieIdFromUri(Uri uri) {
-            String movieId = uri.getQueryParameter(COLUMN_MOVIE_ID);
-            if (null != movieId && movieId.length() > 0) {
-                return Long.parseLong(movieId);
-            }
+        public static String getMovieIdFromUri(Uri uri) {
+            return uri.getQueryParameter(COLUMN_MOVIE_ID);
+        }
 
-            return 0;
+        public static Uri buildVideoUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 
@@ -188,25 +187,8 @@ public class MovieContract {
          */
         public static final String COLUMN_RELEASE_DATE = "release_date";
 
-        /**
-         * Sort by query parameter
-         */
-        private static final String SORT_TYPE_PARAMETER = "sort_by";
-
-        public static Uri buildMoviesWithType(Gallery.GalleryType galleryType) {
-            String galleryTypeParameterValue = Integer.toString(galleryType.ordinal());
-            return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(SORT_TYPE_PARAMETER, galleryTypeParameterValue).build();
-        }
-
-        public static Gallery.GalleryType getSortByFromUri(Uri uri) {
-            String galleryTypeParameterValue = uri.getQueryParameter(SORT_TYPE_PARAMETER);
-            if (null != galleryTypeParameterValue && galleryTypeParameterValue.length() > 0) {
-                int galleryTypeOrdinal = Integer.parseInt(galleryTypeParameterValue);
-                return Gallery.GalleryType.fromOrdinal(galleryTypeOrdinal);
-            }
-
-            return Gallery.GalleryType.POPULAR;
+        public static Uri buildMovieUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 }
