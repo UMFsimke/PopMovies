@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import popmovies.udacity.com.model.mappers.GalleryMapper;
+import popmovies.udacity.com.model.beans.mappers.GalleryMapper;
 
 /**
  * Abstraction of a single gallery which contains list of movies

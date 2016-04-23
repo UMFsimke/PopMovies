@@ -2,9 +2,11 @@
  * Copyright (C) 2016 The Android Open Source Project
  */
 
-package popmovies.udacity.com.presenter.interfaces;
+package popmovies.udacity.com.presenter.interfaces.presenter;
 
 import android.os.Bundle;
+
+import popmovies.udacity.com.presenter.interfaces.view.IView;
 
 /**
  * Interface defining available actions on every presenter
@@ -27,4 +29,19 @@ public interface IPresenter {
      * @param outState Bundle in which to place data
      */
     void onSaveInstanceState(Bundle outState);
+
+    /**
+     * Invoked when user leaves the view and data should be cleared
+     */
+    void onScreenDestroy();
+
+    /**
+     * Invoked when screen is resumed
+     */
+    void onScreenResumed();
+
+    /**
+     * Sets view for presenter
+     */
+    <T extends IView> void setView(T view);
 }

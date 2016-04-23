@@ -5,29 +5,27 @@
 package popmovies.udacity.com.view.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import popmovies.udacity.com.R;
-import popmovies.udacity.com.presenter.PresenterFactory;
-import popmovies.udacity.com.presenter.interfaces.IMovieDetailsPresenter;
-import popmovies.udacity.com.presenter.interfaces.IMovieDetailsView;
+import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
+import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
 
 /**
  * Shows details of a movie
  */
-public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
+public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
+        implements IMovieDetailsView {
 
     /**
      * Bundle key for the movie
@@ -40,77 +38,48 @@ public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
     public static final String TAG = MovieDetailFragment.class.getSimpleName();
 
     /**
-     * Movie details presenter that is controlling flow of the screen
-     */
-    protected IMovieDetailsPresenter mPresenter;
-
-    /**
      * Movie title text view
      */
-    @Bind(R.id.movie_detail_title)
-    TextView mMovieTitle;
+    @Bind(R.id.movie_detail_title) TextView mMovieTitle;
 
     /**
      * Movie info text view
      */
-    @Bind(R.id.movie_detail_info)
-    TextView mMovieInfo;
+    @Bind(R.id.movie_detail_info) TextView mMovieInfo;
 
     /**
      * Movie overview text view
      */
-    @Bind(R.id.movie_detail_overview)
-    TextView mMovieOverview;
+    @Bind(R.id.movie_detail_overview) TextView mMovieOverview;
 
     /**
      * Movie thumbnail image view
      */
-    @Bind(R.id.movie_detail_thumbnail)
-    ImageView mThumbnail;
-
-    /**
-     * Progress bar
-     */
-    @Bind(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    @Bind(R.id.movie_detail_thumbnail) ImageView mThumbnail;
 
     /**
      * User friendly message when movie is not chosen
      * or doesnt exists on API with given movie ID
      */
-    @Bind(R.id.movie_details_empty)
-    TextView mChooseMovie;
+    @Bind(R.id.movie_details_empty) TextView mChooseMovie;
 
     /**
      * Creates new instance of a fragment
-     * @param movieId Movie ID that should be loaded
+     * @param movie Movie that should be loaded
      * @return Movie Detail fragment instance
      */
-    public static MovieDetailFragment newInstance(int movieId) {
+    public static MovieDetailFragment newInstance(Movie movie) {
         Bundle arguments = new Bundle();
-        arguments.putInt(EXTRA_MOVIE_KEY, movieId);
+        arguments.putParcelable(EXTRA_MOVIE_KEY, movie);
         MovieDetailFragment fragment = new MovieDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @NonNull
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        initPresenter();
-        if (savedInstanceState != null) {
-            mPresenter.onRestoreInstanceState(savedInstanceState);
-        }
-    }
-
-    /**
-     * Initializes presenter
-     */
-    protected void initPresenter() {
-        mPresenter = PresenterFactory.getMovieDetailsPresenter(this);
+    protected Integer getLayout() {
+        return R.layout.fragment_movies_detail;
     }
 
     /**
@@ -119,17 +88,8 @@ public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            int movieId = arguments.getInt(EXTRA_MOVIE_KEY, -1);
-            mPresenter.setMovieIdToLoad(movieId);
-        }
-
-        View rootView = inflater.inflate(R.layout.fragment_movies_detail, container, false);
-        ButterKnife.bind(this, rootView);
-        mPresenter.onScreenCreated();
-        return rootView;
+        mPresenter.loadData(getArguments());
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     /**
@@ -182,74 +142,18 @@ public class MovieDetailFragment extends Fragment implements IMovieDetailsView {
                 .into(mThumbnail);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPresenter.onDestroy();
+    protected void setContentVisibility(int visibility) {
+
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mPresenter.onSaveInstanceState(outState);
+    public void showPlaceholder() {
+
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onMovieInvalidId() {
-        mChooseMovie.setVisibility(View.VISIBLE);
-    }
+    public void hidePlaceholder() {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onMovieValid() {
-        mChooseMovie.setVisibility(View.GONE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showServerErrorMessage() {
-        Toast.makeText(getContext(),
-                R.string.api_experiencing_problems_message,
-                Toast.LENGTH_LONG)
-                .show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showNoInternetConnection() {
-        Toast.makeText(getContext(),
-                R.string.no_internet_connection_message,
-                Toast.LENGTH_LONG)
-                .show();
-    }
-
-    /**
-     * Refreshes content of screen
-     */
-    public void refresh() {
-        mPresenter.onScreenCreated();
     }
 }

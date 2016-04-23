@@ -6,23 +6,16 @@ package popmovies.udacity.com.presenter;
 
 import android.os.Bundle;
 
-import java.net.UnknownHostException;
-
-import popmovies.udacity.com.model.api.ApiComponent;
-import popmovies.udacity.com.model.api.ApiModule;
-import popmovies.udacity.com.model.api.DaggerApiComponent;
-import popmovies.udacity.com.model.api.MoviesApi;
+import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.beans.Movie;
-import popmovies.udacity.com.presenter.interfaces.IMovieDetailsPresenter;
-import popmovies.udacity.com.presenter.interfaces.IMovieDetailsView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
+import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
 
 /**
  * Presenter that controls flow of movie details screen
  */
-public class MovieDetailsPresenter implements IMovieDetailsPresenter {
+public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
+        implements IMovieDetailsPresenter {
 
     /**
      * Key for movie bundle values
@@ -34,150 +27,72 @@ public class MovieDetailsPresenter implements IMovieDetailsPresenter {
      */
     protected Movie mMovie;
 
-    /**
-     * View which will render movie details
-     */
-    protected IMovieDetailsView mView;
-
-    /**
-     * API factory component
-     */
-    protected ApiComponent mApiComponent;
-
-    /**
-     * Retrofit API call that will obtain movies from API
-     */
-    protected Call<Movie> mApiCall;
-
-    /**
-     * Defines if state has just been restored or not
-     */
-    protected boolean mRestoredState;
-
-    public MovieDetailsPresenter(IMovieDetailsView view) {
-        mView = view;
-        mRestoredState = false;
+    public MovieDetailsPresenter() {
+        super();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setMovieIdToLoad(int movieId) {
-        if (mRestoredState) return;
+    public void loadData(Bundle bundle) {
+        if (bundle == null) return;
 
-        mMovie = new Movie();
-        mMovie.setId(movieId);
+        mMovie = bundle.getParcelable(EXTRA_MOVIE);
     }
 
     /**
-     * Loads a movie if screen is created, or renders the one
-     * if save instance state is restored
+     * Renders movie if screen is restored
      */
     @Override
-    public void onScreenCreated() {
-        if (null == mView) return;
-
-        mApiComponent = DaggerApiComponent.builder()
-                .apiModule(new ApiModule())
-                .build();
-
-        if (mRestoredState) {
-            mRestoredState = false;
-            renderMovie();
-        } else {
-            loadMovie();
-        }
-    }
-
-    /**
-     * Loads movie from API and renders it
-     */
-    public void loadMovie() {
-        if (mView == null) return;
-
-        if (mMovie == null || mMovie.getId() == -1) {
-            renderMovie();
-            return;
-        }
-
-        MoviesApi api = mApiComponent.moviesApiClient();
-        mApiCall = api.getMovieDetails(mMovie.getId(), Constants.API_KEY);
-
-        mApiCall.enqueue(new Callback<Movie>() {
-            @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (null == mView) return;
-
-                if (response.isSuccess()) {
-                    mMovie = response.body();
-                    renderMovie();
-                    return;
-                }
-
-                mView.hideProgressBar();
-                mView.showServerErrorMessage();
-                renderMovie();
-            }
-
-            @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
-                if (mView == null) {
-                    return;
-                }
-
-                mView.hideProgressBar();
-                if (t instanceof UnknownHostException) {
-                    mView.showNoInternetConnection();
-                }
-
-                renderMovie();
-            }
-        });
+    protected void onViewRestored() {
+        renderMovie();
     }
 
     /**
      * Renders a movie to the view
      */
     protected void renderMovie() {
-        if (mView == null) return;
+        if (!isViewAttached()) return;
 
-        mView.hideProgressBar();
-
+        getView().hideProgressBar();
         if (mMovie == null || mMovie.getId() == -1) {
-            mView.onMovieInvalidId();
+            getView().showPlaceholder();
             return;
         }
 
-        mView.onMovieValid();
-        mView.setMovieTitle(mMovie.getTitle());
-        mView.setMovieOverview(mMovie.getPlotOverview());
-        mView.loadThumbnailUrl(mMovie.getMoviePosterFullUrl());
-
-        mView.setMovieDetails(mMovie.getReleaseDate(),
+        getView().hidePlaceholder();
+        getView().setMovieTitle(mMovie.getTitle());
+        getView().setMovieOverview(mMovie.getPlotOverview());
+        getView().loadThumbnailUrl(mMovie.getMoviePosterFullUrl());
+        getView().setMovieDetails(mMovie.getReleaseDate(),
                 mMovie.getUserRating());
     }
 
     /**
-     * {@inheritDoc}
+     * Loads movie if screen is created
      */
     @Override
-    public void onDestroy() {
-        if (null != mApiCall) {
-            mApiCall.cancel();
-        }
+    protected void onViewCreated() {
+        loadMovie();
+    }
 
-        mView = null;
+    /**
+     * Loads movie from API and renders it
+     */
+    public void loadMovie() {
+    }
+
+    @Override
+    protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
+
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (null == savedInstanceState || null == mView) return;
-
-        mRestoredState = true;
+    protected void restoreData(Bundle savedInstanceState) {
         mMovie = savedInstanceState.getParcelable(EXTRA_MOVIE);
     }
 
@@ -187,5 +102,9 @@ public class MovieDetailsPresenter implements IMovieDetailsPresenter {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(EXTRA_MOVIE, mMovie);
+    }
+
+    @Override
+    public void onScreenResumed() {
     }
 }

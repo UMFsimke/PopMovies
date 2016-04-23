@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import popmovies.udacity.com.model.mappers.VideoMapper;
+import popmovies.udacity.com.model.beans.mappers.VideoMapper;
 
 /**
  * Abstraction of a single video object for a movie.

@@ -2,7 +2,7 @@
  * Copyright (C) 2016 The Android Open Source Project
  */
 
-package popmovies.udacity.com.model.mappers;
+package popmovies.udacity.com.model.beans.mappers;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;

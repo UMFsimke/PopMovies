@@ -7,11 +7,11 @@ package popmovies.udacity.com.model.api;
 import popmovies.udacity.com.model.api.response.MoviesResponse;
 import popmovies.udacity.com.model.api.response.ReviewsResponse;
 import popmovies.udacity.com.model.api.response.VideosResponse;
-import popmovies.udacity.com.model.beans.Movie;
-import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Contains list of definitions of API methods.
@@ -27,11 +27,6 @@ public interface MoviesApi {
      * Endpoint for popular movies
      */
     String POPULAR_API_ROUTE = "movie/popular";
-
-    /**
-     * Endpoint for movie details
-     */
-    String MOVIE_DETAIL_API_ROUTE = "movie/{id}";
 
     /**
      * Endpoint for movie reviews
@@ -60,67 +55,54 @@ public interface MoviesApi {
 
     /**
      * Definition of top rated movies endpoint route which gives as result
-     * {@link Call} that can be used for querying API for top rated movies.
+     * {@link Observable} that can be used for querying API for top rated movies.
      * @param apiKey API key for TheMovieDb. API key is required parameter.
      * @param page Optional parameter, defining page that should be returned in query.
      *             Default fallback value is 1 if not sent
-     * @return {@link Call<MoviesResponse>} that can be initiated for querying API
+     * @return {@link Observable} that can be initiated for querying API
      */
     @GET(TOP_RATED_API_ROUTE)
-    Call<MoviesResponse> getTopRatedMovies(
+    Observable<Response<MoviesResponse>> getTopRatedMovies(
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey,
             @Query(PAGE_QUERY_PARAMETER_NAME) Integer page
     );
 
     /**
      * Definition of popular movies endpoint route which gives as result
-     * {@link Call} that can be used for querying API for popular movies.
+     * {@link Observable} that can be used for querying API for popular movies.
      * @param apiKey API key for TheMovieDb. API key is required parameter.
      * @param page Optional parameter, defining page that should be returned in query.
      *             Default fallback value is 1 if not sent
-     * @return {@link Call<MoviesResponse>} that can be initiated for querying API
+     * @return {@link Observable} that can be initiated for querying API
      */
     @GET(POPULAR_API_ROUTE)
-    Call<MoviesResponse> getPopularMovies(
+    Observable<Response<MoviesResponse>> getPopularMovies(
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey,
             @Query(PAGE_QUERY_PARAMETER_NAME) Integer page
     );
 
     /**
-     * Definition of movie's details endpoint route which gives as result
-     * {@link Call} that can be used for querying API for movie's details.
-     * @param movieId Movie id to load movie's details
-     * @param apiKey API key for TheMovieDb. API key is required parameter.
-     * @return {@link Call<Movie>} that can be initiated for querying API
-     */
-    @GET(MOVIE_DETAIL_API_ROUTE)
-    Call<Movie> getMovieDetails(
-            @Path(MOVIE_ID_PARAMETER_NAME) Long movieId,
-            @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
-    );
-
-    /**
      * Definition of movie's reviews endpoint route which gives as result
-     * {@link Call} that can be used for querying API for movie's reviews.
+     * {@link Observable} that can be used for querying API for movie's reviews.
      * @param movieId Movie id to load movie's reviews
      * @param apiKey API key for TheMovieDb. API key is required parameter.
-     * @return {@link Call<ReviewsResponse>} that can be initiated for querying API
+     * @return {@link Observable} that can be initiated for querying API
      */
     @GET(MOVIE_REVIEWS_API_ROUTE)
-    Call<ReviewsResponse> getMovieReviews(
+    Observable<Response<ReviewsResponse>> getMovieReviews(
             @Path(MOVIE_ID_PARAMETER_NAME) Long movieId,
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );
 
     /**
      * Definition of movie's videos endpoint route which gives as result
-     * {@link Call} that can be used for querying API for movie's videos.
+     * {@link Observable} that can be used for querying API for movie's videos.
      * @param movieId Movie id to load movie's videos
      * @param apiKey API key for TheMovieDb. API key is required parameter.
-     * @return {@link Call<VideosResponse>} that can be initiated for querying API
+     * @return {@link Observable} that can be initiated for querying API
      */
     @GET(MOVIE_VIDEOS_API_ROUTE)
-    Call<VideosResponse> getMovieVideos(
+    Observable<Response<VideosResponse>> getMovieVideos(
             @Path(MOVIE_ID_PARAMETER_NAME) Long movieId,
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );

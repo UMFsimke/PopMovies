@@ -6,169 +6,119 @@ package popmovies.udacity.com.presenter;
 
 import android.os.Bundle;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
+import javax.inject.Inject;
 
-import popmovies.udacity.com.model.api.ApiComponent;
-import popmovies.udacity.com.model.api.ApiModule;
-import popmovies.udacity.com.model.api.DaggerApiComponent;
-import popmovies.udacity.com.model.api.MoviesApi;
+import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.api.response.MoviesResponse;
 import popmovies.udacity.com.model.beans.Gallery;
-import popmovies.udacity.com.presenter.interfaces.IGalleryPresenter;
-import popmovies.udacity.com.presenter.interfaces.IGalleryView;
-import retrofit2.Call;
-import retrofit2.Callback;
+import popmovies.udacity.com.presenter.interfaces.presenter.IGalleryPresenter;
+import popmovies.udacity.com.presenter.interfaces.view.IGalleryView;
 import retrofit2.Response;
+import rx.Observable;
 
 /**
  * Presenter that controls flow of gallery screen
  */
-public class GalleryPresenter implements IGalleryPresenter {
+public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGalleryPresenter {
 
     /**
      * Key for gallery bundle values
      */
     private static final String EXTRA_GALLERY = "EXTRA_GALLERY";
 
-    /**
-     * View which will render list of movies
-     */
-    protected IGalleryView mView;
-
-    /**
-     * Defines if state has just been restored or not
-     */
-    protected boolean mRestoredState;
-
-    /**
-     * Retrofit API call that will obtain movies from API
-     */
-    protected Call<MoviesResponse> mApiCall;
 
     /**
      * Defines how to sort movies on screen
      */
-    protected Gallery.GalleryType mSortBy;
-
-    /**
-     * API factory component
-     */
-    protected ApiComponent mApiComponent;
+    @Inject protected Gallery.GalleryType mSortBy;
 
     /**
      * Gallery that is currently rendered
      */
-    protected Gallery mGallery;
+    @Inject protected Gallery mGallery;
 
     /**
-     * Constructs presenter instance for the given view
-     * @param view View which will be rendering list of movies
+     * Constructs presenter instance
      */
-    public GalleryPresenter(IGalleryView view) {
-        mView = view;
-        mRestoredState = false;
+    public GalleryPresenter() {
+        super();
     }
 
     /**
-     * Loads movies if screen is created or renders current if
-     * state is restored
+     * {@inheritDoc}
+     *
+     * Loads movies if screen is created
      */
     @Override
-    public void onScreenCreated() {
-        if (null == mView) return;
-
-        String settingsGalleryType = mView.getSettingsGalleryType();
-        mSortBy = Gallery.GalleryType.fromString(settingsGalleryType);
-        mApiComponent = DaggerApiComponent.builder()
-                .apiModule(new ApiModule())
-                .build();
-
-        if (mRestoredState) {
-            mRestoredState = false;
-        } else {
-            mGallery = new Gallery();
-            loadMoreMovies();
-        }
-
-        mView.onGalleryUpdated(mGallery);
+    protected void onViewCreated() {
+        loadMovies();
+        getView().showProgressBar();
     }
 
     /**
      * Loads additional page of movies from API
      */
     @Override
-    public void loadMoreMovies() {
-        if (mView == null) return;
-
-        MoviesApi api = mApiComponent.moviesApiClient();
-
+    public void loadMovies() {
         switch (mSortBy) {
             case POPULAR:
-                mApiCall = api.getPopularMovies(Constants.API_KEY , mGallery.getNextPageToLoad());
+                loadPopularMovies();
                 break;
             case TOP_RATED:
-                mApiCall = api.getTopRatedMovies(Constants.API_KEY , mGallery.getNextPageToLoad());
+                loadTopRatedMovies();
                 break;
-            default:
-                return;
+            /*case FAVORITES:
+                loadFavoriteMovies();
+                break;*/
         }
+    }
 
-        mApiCall.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                if (null == mView) return;
+    protected void loadPopularMovies() {
+        Observable<Response<MoviesResponse>> retrofitObservable
+                = mApi.getPopularMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
+        makeApiCall(retrofitObservable);
+    }
 
-                if (response.isSuccess()) {
-                    mGallery.addMovies(response.body().getResults());
-                    mGallery.setLastLoadedPage(response.body().getCurrentPage());
-                    mGallery.setHasMore(response.body().getCurrentPage() ==
-                            response.body().getLastPage());
+    protected void loadTopRatedMovies() {
+        Observable<Response<MoviesResponse>> retrofitObservable
+                = mApi.getTopRatedMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
+        makeApiCall(retrofitObservable);
+    }
 
-                    mView.onGalleryUpdated(mGallery);
-                    return;
-                }
+    @Override
+    protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
+        MoviesResponse moviesResponse = (MoviesResponse) apiResponse;
+        updateGalleryWithResponse(moviesResponse);
+        renderGallery();
+    }
 
-                mView.hideProgressBar();
-                mView.showServerErrorMessage();
-            }
+    protected void updateGalleryWithResponse(MoviesResponse response) {
+        mGallery.addMovies(response.getResults());
+        mGallery.setLastLoadedPage(response.getCurrentPage());
+        mGallery.setHasMore(response.getCurrentPage() ==
+                response.getLastPage());
+    }
 
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                if (mView == null) {
-                    return;
-                }
-
-                mView.hideProgressBar();
-                if (t instanceof UnknownHostException) {
-                    mView.showNoInternetConnection();
-                }
-            }
-        });
+    protected void renderGallery() {
+        getView().renderGallery(mGallery);
     }
 
     /**
-     * Restores state of the gallery screen
-     * @param savedInstanceState Bundle data used to restore instance state
+     * {@inheritDoc}
+     *
+     * Renders movies if state is restored
      */
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (null == savedInstanceState || null == mView) return;
+    protected void onViewRestored() {
+        renderGallery();
+    }
 
-        mRestoredState = true;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void restoreData(Bundle savedInstanceState) {
         mGallery = savedInstanceState.getParcelable(EXTRA_GALLERY);
-    }
-
-    /**
-     * Stops API calls if any is ongoing
-     */
-    @Override
-    public void onDestroy() {
-        if (null != mApiCall) {
-            mApiCall.cancel();
-        }
-
-        mView = null;
     }
 
     /**
@@ -185,14 +135,21 @@ public class GalleryPresenter implements IGalleryPresenter {
      */
     @Override
     public void onScreenResumed() {
-        if (null == mView) return;
+        if (!isViewAttached()) return;
 
-        String settingsGalleryType = mView.getSettingsGalleryType();
-        Gallery.GalleryType savedGalleryType = Gallery.GalleryType.fromString(settingsGalleryType);
-        if (savedGalleryType.ordinal() != mSortBy.ordinal()) {
-            mRestoredState = false;
-            mView.onRefresh();
-            onScreenCreated();
+        if (isSortByChanged()) {
+            reloadData();
         }
+    }
+
+    protected boolean isSortByChanged() {
+        String settingsGalleryType = getView().getSettingsGalleryType();
+        Gallery.GalleryType savedGalleryType = Gallery.GalleryType.fromString(settingsGalleryType);
+        return savedGalleryType.ordinal() != mSortBy.ordinal();
+    }
+
+    protected void reloadData() {
+        getView().resetScroll();
+        onScreenCreated();
     }
 }

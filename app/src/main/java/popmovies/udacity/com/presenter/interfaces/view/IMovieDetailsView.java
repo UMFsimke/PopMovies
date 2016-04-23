@@ -2,12 +2,14 @@
  * Copyright (C) 2016 The Android Open Source Project
  */
 
-package popmovies.udacity.com.presenter.interfaces;
+package popmovies.udacity.com.presenter.interfaces.view;
+
+import popmovies.udacity.com.presenter.interfaces.view.IView;
 
 /**
  * Interface defining available actions on movies details view
  */
-public interface IMovieDetailsView {
+public interface IMovieDetailsView extends IView {
 
     /**
      * Renders movie title
@@ -35,30 +37,12 @@ public interface IMovieDetailsView {
     void loadThumbnailUrl(String thumbnailUrl);
 
     /**
-     * Invoked when API didn't returned result for a movie since it
-     * doesnt exists
+     * Invoked when movie is not valid. Hides all views and shows placeholders
      */
-    void onMovieInvalidId();
+    void showPlaceholder();
 
     /**
-     * Invoked when progress bar should be hidden
+     * Hides placeholder and shows movie details
      */
-    void hideProgressBar();
-
-    /**
-     * Invoked when API returned result for given movie
-     */
-    void onMovieValid();
-
-    /**
-     * Invoked when API is not responding and message
-     * should be shown
-     */
-    void showServerErrorMessage();
-
-    /**
-     * Invoked when there is no internet connection
-     * and user should be notified
-     */
-    void showNoInternetConnection();
+    void hidePlaceholder();
 }

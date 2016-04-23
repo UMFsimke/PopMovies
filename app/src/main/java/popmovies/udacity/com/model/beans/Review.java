@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import popmovies.udacity.com.model.mappers.ReviewMapper;
+import popmovies.udacity.com.model.beans.mappers.ReviewMapper;
 
 /**
  * Abstraction of a single review object for a movie.

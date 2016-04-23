@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import popmovies.udacity.com.model.mappers.MovieMapper;
+import popmovies.udacity.com.model.beans.mappers.MovieMapper;
 
 /**
  * Abstraction of a movie object.

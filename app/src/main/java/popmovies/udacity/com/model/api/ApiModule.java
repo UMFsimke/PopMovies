@@ -4,6 +4,8 @@
 
 package popmovies.udacity.com.model.api;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
@@ -21,7 +23,9 @@ public class ApiModule {
      * Provides API Retrofit client for communicating with API
      * @return MoviesAPI client
      */
-    @Provides public MoviesApi provideMoviesApiClient() {
+    @Singleton
+    @Provides
+    public MoviesApi provideMoviesApiClient() {
         return new Retrofit.Builder()
                 .baseUrl(ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create())
