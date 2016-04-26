@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.api.response.MoviesResponse;
 import popmovies.udacity.com.model.beans.Gallery;
@@ -42,6 +43,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
      */
     public GalleryPresenter() {
         super();
+        PopMovies.getInstance().graph().inject(this);
     }
 
     /**
@@ -90,6 +92,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         MoviesResponse moviesResponse = (MoviesResponse) apiResponse;
         updateGalleryWithResponse(moviesResponse);
         renderGallery();
+        getView().hideProgressBar();
     }
 
     protected void updateGalleryWithResponse(MoviesResponse response) {

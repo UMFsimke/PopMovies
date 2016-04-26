@@ -39,11 +39,17 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        inject();
         mPresenter.setView(this);
         if (savedInstanceState != null) {
             mPresenter.onRestoreInstanceState(savedInstanceState);
         }
     }
+
+    /**
+     * Initiates DI injection
+     */
+    protected abstract void inject();
 
     /**
      * {@inheritDoc}

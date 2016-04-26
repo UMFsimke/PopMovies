@@ -25,7 +25,7 @@ import popmovies.udacity.com.view.controls.GalleryThumbnail;
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder>{
 
     public interface OnMovieClickedListener {
-        void onMovieClicked(int movieId);
+        void onMovieClicked(Movie movie);
     }
 
     /**
@@ -100,8 +100,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
          */
         @OnClick(R.id.thumbnail)
         void onMovieClicked(View v) {
-            int movieId = (Integer) v.getTag();
-            ((OnMovieClickedListener) v.getContext()).onMovieClicked(movieId);
+            Movie movie = (Movie) v.getTag();
+            ((OnMovieClickedListener) v.getContext()).onMovieClicked(movie);
         }
 
         /**
@@ -119,7 +119,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     .placeholder(R.drawable.ic_action_refresh)
                     .into(mThumnbail);
 
-            itemView.setTag(movie.getId());
+            itemView.setTag(movie);
             itemView.setContentDescription(movie.getTitle());
         }
     }

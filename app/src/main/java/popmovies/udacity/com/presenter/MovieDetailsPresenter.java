@@ -6,6 +6,7 @@ package popmovies.udacity.com.presenter;
 
 import android.os.Bundle;
 
+import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
@@ -29,6 +30,7 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
 
     public MovieDetailsPresenter() {
         super();
+        PopMovies.getInstance().graph().inject(this);
     }
 
     /**

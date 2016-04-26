@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
+import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
@@ -74,6 +75,11 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         MovieDetailFragment fragment = new MovieDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    protected void inject() {
+        PopMovies.getInstance().graph().inject(this);
     }
 
     @NonNull

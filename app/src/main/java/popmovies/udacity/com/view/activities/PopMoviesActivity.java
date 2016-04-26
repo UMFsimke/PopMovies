@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import popmovies.udacity.com.R;
+import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.view.adapter.GalleryAdapter;
 import popmovies.udacity.com.view.fragments.GalleryFragment;
 import popmovies.udacity.com.view.fragments.MovieDetailFragment;
@@ -56,7 +57,7 @@ public class PopMoviesActivity extends AppCompatActivity
         }
 
         GalleryFragment galleryFragment = getGalleryFragment();
-        galleryFragment.setIsTabletMode(mIsTablet);
+        //galleryFragment.setIsTabletMode(mIsTablet);
     }
 
     /**
@@ -109,12 +110,12 @@ public class PopMoviesActivity extends AppCompatActivity
 
     /**
      * When movie is clicked it is shown in details fragment
-     * @param movieId Movie id to load
+     * @param movie Movie to show
      */
     @Override
-    public void onMovieClicked(int movieId) {
+    public void onMovieClicked(Movie movie) {
         if (mIsTablet) {
-            MovieDetailFragment fragment = MovieDetailFragment.newInstance(movieId);
+            MovieDetailFragment fragment = MovieDetailFragment.newInstance(movie);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_fragment_container,
                             fragment,
@@ -124,7 +125,7 @@ public class PopMoviesActivity extends AppCompatActivity
         }
 
         Bundle bundle = new Bundle();
-        bundle.putInt(MovieDetailFragment.EXTRA_MOVIE_KEY, movieId);
+        bundle.putParcelable(MovieDetailFragment.EXTRA_MOVIE_KEY, movie);
 
         Intent intent = new Intent(this, MovieDetailsActivity.class);
         intent.putExtras(bundle);

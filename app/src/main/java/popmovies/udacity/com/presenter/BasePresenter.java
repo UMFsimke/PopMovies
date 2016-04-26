@@ -159,6 +159,7 @@ public abstract class BasePresenter<V extends IView> implements IPresenter {
 
         Subscription subscription = ApiQueryObservable.createObservable(observable)
                 .handleErrorOnView(getView())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Action1<T>() {

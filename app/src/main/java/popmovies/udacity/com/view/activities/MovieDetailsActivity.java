@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import popmovies.udacity.com.R;
+import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.view.fragments.MovieDetailFragment;
 
 /**
@@ -39,8 +40,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
-            int movieId = getIntent().getIntExtra(MovieDetailFragment.EXTRA_MOVIE_KEY, -1);
-            MovieDetailFragment fragment = MovieDetailFragment.newInstance(movieId);
+            Movie movie = getIntent().getParcelableExtra(MovieDetailFragment.EXTRA_MOVIE_KEY);
+            MovieDetailFragment fragment = MovieDetailFragment.newInstance(movie);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.movie_detail_fragment_container,
                             fragment,

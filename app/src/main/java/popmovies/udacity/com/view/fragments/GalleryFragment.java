@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import butterknife.Bind;
+import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Gallery;
 import popmovies.udacity.com.presenter.interfaces.presenter.IGalleryPresenter;
@@ -33,6 +34,11 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
      * Scroll listener for lazy loading
      */
     protected EndlessRecyclerOnScrollListener mScrollListener;
+
+    @Override
+    protected void inject() {
+        PopMovies.getInstance().graph().inject(this);
+    }
 
     @NonNull
     @Override
