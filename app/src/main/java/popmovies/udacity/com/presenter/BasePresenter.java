@@ -7,6 +7,7 @@ package popmovies.udacity.com.presenter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import popmovies.udacity.com.presenter.interfaces.presenter.IPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IView;
 import retrofit2.Response;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -150,7 +152,8 @@ public abstract class BasePresenter<V extends IView> implements IPresenter {
     }
 
     /**
-     * Makes an API call using {@link ApiQueryObservable}
+     * Makes an API call using {@link ApiQueryObservable}, if error was encountered invokes
+     * view specific methods.
      * @param observable Retrofit observable
      * @param <T> Type of response
      */
@@ -158,7 +161,7 @@ public abstract class BasePresenter<V extends IView> implements IPresenter {
         if (!isViewAttached()) return;
 
         Subscription subscription = ApiQueryObservable.createObservable(observable)
-                .handleErrorOnView(getView())
+                .map()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -166,6 +169,16 @@ public abstract class BasePresenter<V extends IView> implements IPresenter {
                     @Override
                     public void call(T apiResponse) {
                         onApiResponse(apiResponse);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mView.hideProgressBar();
+                        if (throwable instanceof UnknownHostException) {
+                            mView.showNoInternetConnection();
+                        } else {
+                            mView.showServerErrorMessage();
+                        }
                     }
                 });
         addSubscription(subscription);

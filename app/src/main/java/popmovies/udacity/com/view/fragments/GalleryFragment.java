@@ -4,8 +4,6 @@
 
 package popmovies.udacity.com.view.fragments;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -79,6 +77,8 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
         if (mScrollListener != null) {
             mScrollListener.reset();
         }
+
+        mGallery.scrollToPosition(0);
     }
 
     /**
@@ -94,16 +94,6 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
         }
 
         adapter.replaceItems(gallery);
-    }
-
-    /**
-     * Returns settings gallery type saved in preferences
-     * @return Gallery type saved in preferences
-     */
-    @Override
-    public String getSettingsGalleryType() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return prefs.getString(getString(R.string.pref_gallery_type_key), null);
     }
 
     @Override

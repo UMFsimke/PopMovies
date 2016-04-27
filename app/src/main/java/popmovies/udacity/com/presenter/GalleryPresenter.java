@@ -114,6 +114,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     @Override
     protected void onViewRestored() {
         renderGallery();
+        getView().hideProgressBar();
     }
 
     /**
@@ -141,14 +142,27 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         if (!isViewAttached()) return;
 
         if (isSortByChanged()) {
+            clearGallery();
+            changeSortBy();
             reloadData();
         }
     }
 
     protected boolean isSortByChanged() {
-        String settingsGalleryType = getView().getSettingsGalleryType();
-        Gallery.GalleryType savedGalleryType = Gallery.GalleryType.fromString(settingsGalleryType);
-        return savedGalleryType.ordinal() != mSortBy.ordinal();
+        Gallery.GalleryType savedGalleryType = PopMovies.getInstance()
+                .graph()
+                .getSavedGalleryType();
+        return mSortBy.ordinal() != savedGalleryType.ordinal();
+    }
+
+    protected void clearGallery() {
+        mGallery = new Gallery();
+    }
+
+    protected void changeSortBy() {
+        mSortBy = PopMovies.getInstance()
+                .graph()
+                .getSavedGalleryType();
     }
 
     protected void reloadData() {

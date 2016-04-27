@@ -19,12 +19,6 @@ public interface IGalleryView extends IView {
     void renderGallery(Gallery gallery);
 
     /**
-     * Returns gallery type saved in settings shared preferences
-     * @return Chosen gallery type to show
-     */
-    String getSettingsGalleryType();
-
-    /**
      * Notifies screen that data will refresh and scroll has to be reset
      */
     void resetScroll();

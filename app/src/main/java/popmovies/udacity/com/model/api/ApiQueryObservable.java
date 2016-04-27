@@ -40,12 +40,11 @@ public class ApiQueryObservable<T> extends Observable<Response<T>> {
 
     /**
      * Given an error handler passes any encountered errors to it.
-     *
-     * @param view
-     * @return
+     * @return Operator that maps the result and as well sends any errors caused by API
+     * communication.
      */
     @NonNull
-    public final <V extends IView> Observable<T> handleErrorOnView(V view) {
-        return lift(new ApiQueryOperator<T>(view));
+    public final Observable<T> map() {
+        return lift(new ApiQueryOperator<T>());
     }
 }

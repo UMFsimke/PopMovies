@@ -12,5 +12,5 @@ public class Constants {
     /**
      * API key
      */
-    public static final String API_KEY = "YOUR_API_KEY_HERE";
+    public static final String API_KEY = "ENTER API KEY HERE";
 }
