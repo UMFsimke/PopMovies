@@ -6,8 +6,6 @@ package popmovies.udacity.com.view.fragments;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import butterknife.Bind;
 import popmovies.udacity.com.PopMovies;
@@ -16,6 +14,7 @@ import popmovies.udacity.com.model.beans.Gallery;
 import popmovies.udacity.com.presenter.interfaces.presenter.IGalleryPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IGalleryView;
 import popmovies.udacity.com.view.adapter.GalleryAdapter;
+import popmovies.udacity.com.view.controls.AutofitRecyclerView;
 import popmovies.udacity.com.view.controls.EndlessRecyclerOnScrollListener;
 
 /**
@@ -26,7 +25,7 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
     /**
      * RecyclerView that is used to render movies
      */
-    @Bind(R.id.gallery_recycler_view) protected RecyclerView mGallery;
+    @Bind(R.id.gallery_recycler_view) protected AutofitRecyclerView mGallery;
 
     /**
      * Scroll listener for lazy loading
@@ -53,11 +52,7 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
      * Initializes {@link GridLayoutManager} and {@link EndlessRecyclerOnScrollListener} for the {@link #mGallery}
      */
     protected void initRecyclerView() {
-        //TODO: Implement autofit feature
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mGallery.setLayoutManager(manager);
-
+        GridLayoutManager manager = (GridLayoutManager) mGallery.getLayoutManager();
         mScrollListener = new EndlessRecyclerOnScrollListener(manager) {
             @Override
             public void onLoadMore() {
@@ -65,6 +60,7 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
                 mPresenter.loadMovies();
             }
         };
+
         mGallery.addOnScrollListener(mScrollListener);
         mGallery.getRecycledViewPool().setMaxRecycledViews(0, 1000);
     }

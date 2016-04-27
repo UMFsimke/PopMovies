@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
+    <popmovies.udacity.com.view.controls.AutofitRecyclerView
         android:id="@+id/gallery_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:columnWidth="@dimen/thumbnail_width"
         android:background="@color/backgroundColor"/>
     <ProgressBar
         android:id="@+id/progress_bar"
