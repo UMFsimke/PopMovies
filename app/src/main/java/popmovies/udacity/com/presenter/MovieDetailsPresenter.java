@@ -8,9 +8,14 @@ import android.os.Bundle;
 
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
+import popmovies.udacity.com.model.api.response.ReviewsResponse;
+import popmovies.udacity.com.model.api.response.VideosResponse;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
+import popmovies.udacity.com.view.fragments.MovieDetailFragment;
+import retrofit2.Response;
+import rx.Observable;
 
 /**
  * Presenter that controls flow of movie details screen
@@ -40,14 +45,49 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     public void loadData(Bundle bundle) {
         if (bundle == null) return;
 
-        mMovie = bundle.getParcelable(EXTRA_MOVIE);
+        mMovie = bundle.getParcelable(MovieDetailFragment.EXTRA_MOVIE_KEY);
     }
 
     /**
-     * Renders movie if screen is restored
+     * Loads movie's details if screen is created
      */
     @Override
-    protected void onViewRestored() {
+    protected void onViewCreated() {
+        loadReviews();
+    }
+
+    /**
+     * Loads reviews for a movie from API
+     */
+    protected void loadReviews() {
+        if (getView() == null || mMovie == null) return;
+
+        Observable<Response<ReviewsResponse>> retrofitObservable
+                = mApi.getMovieReviews(mMovie.getId(), Constants.API_KEY);
+        makeApiCall(retrofitObservable);
+    }
+
+    /**
+     * Loads videos for a movie from API
+     */
+    protected void loadVideos() {
+        if (getView() == null || mMovie == null) return;
+
+        Observable<Response<VideosResponse>> retrofitObservable
+                = mApi.getMovieVideos(mMovie.getId(), Constants.API_KEY);
+        makeApiCall(retrofitObservable);
+    }
+
+    @Override
+    protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
+        if (apiResponse instanceof ReviewsResponse) {
+            mMovie.setReviews(apiResponse.getResults());
+            loadVideos();
+            return;
+        } else if (apiResponse instanceof VideosResponse) {
+            mMovie.setVideos(apiResponse.getResults());
+        }
+
         renderMovie();
     }
 
@@ -72,22 +112,22 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     }
 
     /**
-     * Loads movie if screen is created
+     * Loads movie's videos and reviews if they were not loaded.
+     * Renders movie if screen is restored
      */
     @Override
-    protected void onViewCreated() {
-        loadMovie();
-    }
+    protected void onViewRestored() {
+        if (mMovie != null && mMovie.getReviews() == null) {
+            loadReviews();
+            return;
+        }
 
-    /**
-     * Loads movie from API and renders it
-     */
-    public void loadMovie() {
-    }
+        if (mMovie != null && mMovie.getVideos() == null) {
+            loadVideos();
+            return;
+        }
 
-    @Override
-    protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
-
+        renderMovie();
     }
 
     /**

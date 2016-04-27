@@ -62,7 +62,12 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
      * User friendly message when movie is not chosen
      * or doesnt exists on API with given movie ID
      */
-    @Bind(R.id.movie_details_empty) TextView mChooseMovie;
+    @Bind(R.id.movie_details_empty) TextView mPlaceholderView;
+
+    /**
+     * Wrapper for all movie details views
+     */
+    @Bind(R.id.movie_details_wrapper) View mMovieDetailsWrapper;
 
     /**
      * Creates new instance of a fragment
@@ -150,16 +155,17 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
 
     @Override
     protected void setContentVisibility(int visibility) {
-
+        hidePlaceholder();
+        mMovieDetailsWrapper.setVisibility(visibility);
     }
 
     @Override
     public void showPlaceholder() {
-
+        mPlaceholderView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hidePlaceholder() {
-
+        mPlaceholderView.setVisibility(View.GONE);
     }
 }
