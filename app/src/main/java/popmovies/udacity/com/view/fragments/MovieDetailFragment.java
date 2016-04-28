@@ -4,11 +4,18 @@
 
 package popmovies.udacity.com.view.fragments;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,6 +25,7 @@ import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
+import popmovies.udacity.com.view.activities.SettingsActivity;
 import popmovies.udacity.com.view.adapter.MovieDetailsAdapter;
 import popmovies.udacity.com.view.controls.EndlessRecyclerOnScrollListener;
 
@@ -38,6 +46,11 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
     public static final String TAG = MovieDetailFragment.class.getSimpleName();
 
     /**
+     * Share action provider
+     */
+    private ShareActionProvider mShareActionProvider;
+
+    /**
      * Recycler view that renders details of a movie
      */
     @Bind(R.id.movie_details_list) protected RecyclerView mMovieDetailsList;
@@ -53,6 +66,12 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         MovieDetailFragment fragment = new MovieDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     /**
@@ -105,14 +124,34 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
      */
     @Override
     public void renderMovie(Movie movie) {
+        getActivity().invalidateOptionsMenu();
         MovieDetailsAdapter adapter = (MovieDetailsAdapter) mMovieDetailsList.getAdapter();
         if (adapter == null) {
             adapter = new MovieDetailsAdapter(movie);
             mMovieDetailsList.setAdapter(adapter);
+            if (mShareActionProvider != null) {
+                setupShare();
+            }
+
             return;
         }
 
         adapter.replaceMovie(movie);
+    }
+
+    protected void setupShare() {
+        String trailerUrl = mPresenter.getTrailerUrl();
+        if (trailerUrl != null) {
+            mShareActionProvider.setShareIntent(createShareTrailerIntent());
+        }
+    }
+
+    protected Intent createShareTrailerIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mPresenter.getTrailerUrl());
+        return shareIntent;
     }
 
     /**
@@ -121,5 +160,38 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
     @Override
     protected void setContentVisibility(int visibility) {
         mMovieDetailsList.setVisibility(visibility);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (!mPresenter.doesMovieHasTrailers()) {
+            inflater.inflate(R.menu.activity_popmovies, menu);
+            return;
+        }
+
+        inflater.inflate(R.menu.activity_movie_details, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        setupShare();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            return true;
+        } else if (id == R.id.action_refresh) {
+            refresh();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -57,42 +57,4 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_popmovies, menu);
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        } else if (id == R.id.action_refresh) {
-            refresh();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Refreshes content of screen
-     */
-    protected void refresh() {
-        MovieDetailFragment movieDetailFragment = (MovieDetailFragment) getSupportFragmentManager()
-                .findFragmentByTag(MovieDetailFragment.TAG);
-
-        if (movieDetailFragment == null) return;
-
-        movieDetailFragment.refresh();
-    }
 }

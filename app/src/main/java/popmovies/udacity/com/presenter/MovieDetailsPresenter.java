@@ -5,6 +5,7 @@
 package popmovies.udacity.com.presenter;
 
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
 
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
@@ -114,7 +115,6 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
 
         if (mMovie != null && mMovie.getVideos() == null) {
             loadVideos();
-            return;
         }
 
         renderMovie();
@@ -138,5 +138,21 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
 
     @Override
     public void onScreenResumed() {
+    }
+
+    @Override
+    public void onAddToFavoritesClicked() {
+        if (getView() == null || mMovie == null) return;
+
+    }
+
+    @Override
+    public String getTrailerUrl() {
+        return mMovie.getVideos().get(0).getYoutubeUrl();
+    }
+
+    @Override
+    public boolean doesMovieHasTrailers() {
+        return mMovie != null && mMovie.getVideos() != null && mMovie.getVideos().size() > 0;
     }
 }

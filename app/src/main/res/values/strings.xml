@@ -28,4 +28,5 @@
     <string name="format_movie_details">Released on: <xliff:g id="released_on">%1$s</xliff:g> | Rating: <xliff:g id="rating">%2$s</xliff:g>/10</string>
     <string name="trailers_title">Trailers</string>
     <string name="reviews_title">Reviews</string>
+    <string name="action_share">Share</string>
 </resources>

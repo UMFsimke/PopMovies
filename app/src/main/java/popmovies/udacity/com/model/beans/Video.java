@@ -16,6 +16,8 @@ import popmovies.udacity.com.model.beans.mappers.VideoMapper;
  */
 public class Video implements Parcelable {
 
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+
     /**
      * Local database ID
      */
@@ -71,6 +73,14 @@ public class Video implements Parcelable {
 
     public long getMovieId() {
         return mMovieId;
+    }
+
+    /**
+     * Creates and returns formatted Youtube URL string
+     * @return Youtube URL string of a video
+     */
+    public String getYoutubeUrl() {
+        return String.format("%s%s", YOUTUBE_URL, mYoutubeKey);
     }
 
     /**
