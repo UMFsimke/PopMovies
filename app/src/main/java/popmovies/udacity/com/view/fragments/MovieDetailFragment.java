@@ -6,14 +6,11 @@ package popmovies.udacity.com.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import popmovies.udacity.com.PopMovies;
@@ -21,6 +18,8 @@ import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
+import popmovies.udacity.com.view.adapter.MovieDetailsAdapter;
+import popmovies.udacity.com.view.controls.EndlessRecyclerOnScrollListener;
 
 /**
  * Shows details of a movie
@@ -39,35 +38,9 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
     public static final String TAG = MovieDetailFragment.class.getSimpleName();
 
     /**
-     * Movie title text view
+     * Recycler view that renders details of a movie
      */
-    @Bind(R.id.movie_detail_title) TextView mMovieTitle;
-
-    /**
-     * Movie info text view
-     */
-    @Bind(R.id.movie_detail_info) TextView mMovieInfo;
-
-    /**
-     * Movie overview text view
-     */
-    @Bind(R.id.movie_detail_overview) TextView mMovieOverview;
-
-    /**
-     * Movie thumbnail image view
-     */
-    @Bind(R.id.movie_detail_thumbnail) ImageView mThumbnail;
-
-    /**
-     * User friendly message when movie is not chosen
-     * or doesnt exists on API with given movie ID
-     */
-    @Bind(R.id.movie_details_empty) TextView mPlaceholderView;
-
-    /**
-     * Wrapper for all movie details views
-     */
-    @Bind(R.id.movie_details_wrapper) View mMovieDetailsWrapper;
+    @Bind(R.id.movie_details_list) protected RecyclerView mMovieDetailsList;
 
     /**
      * Creates new instance of a fragment
@@ -82,11 +55,17 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         return fragment;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void inject() {
         PopMovies.getInstance().graph().inject(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     protected Integer getLayout() {
@@ -107,65 +86,40 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
      * {@inheritDoc}
      */
     @Override
-    public void setMovieTitle(String movieTitle) {
-        mMovieTitle.setText(movieTitle);
+    protected void onPrepareLayoutFinished() {
+        initRecyclerView();
+    }
+
+    /**
+     * Initializes {@link LinearLayoutManager} and {@link EndlessRecyclerOnScrollListener}
+     * for the {@link #mMovieDetailsList}
+     */
+    protected void initRecyclerView() {
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        mMovieDetailsList.setLayoutManager(manager);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setMovieDetails(String releaseDate, double rating) {
-        String releaseDateString = TextUtils.isEmpty(releaseDate) ?
-                getString(R.string.date_not_defined) :
-                releaseDate;
+    public void renderMovie(Movie movie) {
+        MovieDetailsAdapter adapter = (MovieDetailsAdapter) mMovieDetailsList.getAdapter();
+        if (adapter == null) {
+            adapter = new MovieDetailsAdapter(movie);
+            mMovieDetailsList.setAdapter(adapter);
+            return;
+        }
 
-        String ratingString = rating == 0 ?
-                getString(R.string.rating_not_defined) :
-                String.valueOf(rating);
-        String movieInfo = String.format(
-                getString(R.string.format_movie_details),
-                releaseDateString,
-                ratingString);
-
-        mMovieInfo.setText(movieInfo);
+        adapter.replaceMovie(movie);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void setMovieOverview(String movieOverview) {
-        mMovieOverview.setText(movieOverview);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void loadThumbnailUrl(String thumbnailUrl) {
-        Picasso.with(getContext().getApplicationContext())
-                .load(thumbnailUrl)
-                .fit()
-                .centerCrop()
-                .placeholder(R.drawable.ic_action_refresh)
-                .error(R.drawable.ic_stop)
-                .into(mThumbnail);
-    }
-
     @Override
     protected void setContentVisibility(int visibility) {
-        hidePlaceholder();
-        mMovieDetailsWrapper.setVisibility(visibility);
-    }
-
-    @Override
-    public void showPlaceholder() {
-        mPlaceholderView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hidePlaceholder() {
-        mPlaceholderView.setVisibility(View.GONE);
+        mMovieDetailsList.setVisibility(visibility);
     }
 }

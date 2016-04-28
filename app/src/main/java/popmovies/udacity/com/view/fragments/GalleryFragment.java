@@ -49,7 +49,8 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
     }
 
     /**
-     * Initializes {@link GridLayoutManager} and {@link EndlessRecyclerOnScrollListener} for the {@link #mGallery}
+     * Initializes {@link GridLayoutManager} and {@link EndlessRecyclerOnScrollListener}
+     * for the {@link #mGallery}
      */
     protected void initRecyclerView() {
         GridLayoutManager manager = (GridLayoutManager) mGallery.getLayoutManager();

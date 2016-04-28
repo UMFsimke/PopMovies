@@ -98,17 +98,7 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         if (!isViewAttached()) return;
 
         getView().hideProgressBar();
-        if (mMovie == null || mMovie.getId() == -1) {
-            getView().showPlaceholder();
-            return;
-        }
-
-        getView().hidePlaceholder();
-        getView().setMovieTitle(mMovie.getTitle());
-        getView().setMovieOverview(mMovie.getPlotOverview());
-        getView().loadThumbnailUrl(mMovie.getMoviePosterFullUrl());
-        getView().setMovieDetails(mMovie.getReleaseDate(),
-                mMovie.getUserRating());
+        getView().renderMovie(mMovie);
     }
 
     /**
