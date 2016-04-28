@@ -5,6 +5,8 @@
 package popmovies.udacity.com.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.model.beans.Review;
@@ -379,6 +382,15 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          */
         public void render(Video trailer) {
             mTrailerName.setText(trailer.getName());
+            mTrailerName.setTag(trailer.getYoutubeUrl());
+        }
+
+        @OnClick(R.id.trailer_name)
+        void onTrailerClicked(View v) {
+            String url = (String) mTrailerName.getTag();
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            v.getContext().startActivity(i);
         }
     }
 
