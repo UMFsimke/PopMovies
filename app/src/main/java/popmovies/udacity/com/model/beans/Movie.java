@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.beans;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -76,6 +77,14 @@ public class Movie implements Parcelable {
     protected boolean mFavorite;
 
     public Movie() {
+    }
+
+    /**
+     * Creates new instance of object from {@link Cursor}
+     * @param cursor {@link Cursor}
+     */
+    public Movie(Cursor cursor) {
+        MovieMapper.constructFromCursor(cursor, this);
     }
 
     public String getId() {

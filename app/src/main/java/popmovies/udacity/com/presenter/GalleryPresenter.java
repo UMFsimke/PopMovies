@@ -4,7 +4,16 @@
 
 package popmovies.udacity.com.presenter;
 
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -12,6 +21,9 @@ import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.api.response.MoviesResponse;
 import popmovies.udacity.com.model.beans.Gallery;
+import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.model.beans.mappers.MovieMapper;
+import popmovies.udacity.com.model.database.MovieContract;
 import popmovies.udacity.com.presenter.interfaces.presenter.IGalleryPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IGalleryView;
 import retrofit2.Response;
@@ -20,7 +32,8 @@ import rx.Observable;
 /**
  * Presenter that controls flow of gallery screen
  */
-public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGalleryPresenter {
+public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGalleryPresenter,
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     /**
      * Key for gallery bundle values
@@ -37,6 +50,11 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
      * Gallery that is currently rendered
      */
     @Inject protected Gallery mGallery;
+
+    /**
+     * Movie's loader ID
+     */
+    private static final int MOVIES_LOADER = 0;
 
     /**
      * Constructs presenter instance
@@ -69,9 +87,9 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
             case TOP_RATED:
                 loadTopRatedMovies();
                 break;
-            /*case FAVORITES:
+            case FAVORITES:
                 loadFavoriteMovies();
-                break;*/
+                break;
         }
     }
 
@@ -83,8 +101,13 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
 
     protected void loadTopRatedMovies() {
         Observable<Response<MoviesResponse>> retrofitObservable
-                = mApi.getTopRatedMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
+        =mApi.getTopRatedMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
         makeApiCall(retrofitObservable);
+    }
+
+    protected void loadFavoriteMovies() {
+        LoaderManager manager = ((Activity) getView().getContext()).getLoaderManager();
+        manager.restartLoader(MOVIES_LOADER, null, this);
     }
 
     @Override
@@ -168,5 +191,51 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     protected void reloadData() {
         getView().resetScroll();
         onScreenCreated();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder = MovieContract.MovieEntry._ID + " ASC";
+        Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+
+        return new CursorLoader(getView().getContext(),
+                uri,
+                MovieMapper.MOVIE_COLUMNS,
+                null,
+                null,
+                sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (getView() == null) return;
+
+        if (cursor == null) {
+            renderGallery();
+            getView().hideProgressBar();
+            return;
+        }
+
+        List<Movie> movies = new ArrayList<>();
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Movie movie = new Movie(cursor);
+                movies.add(movie);
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        mGallery.addMovies(movies);
+        mGallery.setLastLoadedPage(1);
+        mGallery.setHasMore(false);
+        renderGallery();
+        getView().hideProgressBar();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 }

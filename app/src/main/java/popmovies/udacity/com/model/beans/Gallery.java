@@ -23,7 +23,8 @@ public class Gallery implements Parcelable {
      */
     public enum GalleryType {
         POPULAR,
-        TOP_RATED;
+        TOP_RATED,
+        FAVORITES;
 
         /**
          * Returns {@link GalleryType} for given ordinal
@@ -39,6 +40,8 @@ public class Gallery implements Parcelable {
 
             if ("top_rated".equals(ordinalString.toLowerCase(Locale.US))) {
                 return TOP_RATED;
+            } else if ("favorite".equals(ordinalString.toLowerCase(Locale.US))) {
+                return FAVORITES;
             }
 
             return POPULAR;
