@@ -4,6 +4,7 @@
 
 package popmovies.udacity.com.model.beans;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,9 +20,10 @@ public class Video implements Parcelable {
     private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
     /**
-     * Local database ID
+     * ID
      */
-    protected long mId;
+    @SerializedName("id")
+    protected String mId;
 
     /**
      * Name of video
@@ -38,16 +40,16 @@ public class Video implements Parcelable {
     /**
      * Local database movie ID
      */
-    protected long mMovieId;
+    protected String mMovieId;
 
     public Video() {
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         mId = id;
     }
 
-    public long getId() {
+    public String getId() {
         return mId;
     }
 
@@ -67,11 +69,11 @@ public class Video implements Parcelable {
         return mYoutubeKey;
     }
 
-    public void setMovieId(long movieId) {
+    public void setMovieId(String movieId) {
         mMovieId = movieId;
     }
 
-    public long getMovieId() {
+    public String getMovieId() {
         return mMovieId;
     }
 
@@ -112,5 +114,9 @@ public class Video implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ContentValues getContentValues() {
+        return VideoMapper.constructContentValues(this);
     }
 }

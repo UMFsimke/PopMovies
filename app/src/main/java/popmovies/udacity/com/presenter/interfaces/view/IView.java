@@ -4,6 +4,8 @@
 
 package popmovies.udacity.com.presenter.interfaces.view;
 
+import android.content.Context;
+
 /**
  * Interface defining available actions on any view
  */
@@ -30,4 +32,10 @@ public interface IView {
      * and user should be notified
      */
     void showNoInternetConnection();
+
+    /**
+     * Returns context of a view
+     * @return Context
+     */
+    Context getContext();
 }

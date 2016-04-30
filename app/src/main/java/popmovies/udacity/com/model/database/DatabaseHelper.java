@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private final static String CREATE_FAVORITE_MOVIES_TABLE_QUERY =
             "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
-                    MovieEntry._ID + " INTEGER PRIMARY KEY," +
+                    MovieEntry._ID + " TEXT PRIMARY KEY," +
                     MovieEntry.COLUMN_TITLE + " TEXT, " +
                     MovieEntry.COLUMN_POSTER_PATH + " TEXT, " +
                     MovieEntry.COLUMN_OVERVIEW + " TEXT, " +
@@ -43,13 +43,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Create video table query
      */
-    //TODO: add API keys
     private final static String CREATE_VIDEO_TABLE_QUERY =
             "CREATE TABLE " + VideoEntry.TABLE_NAME + " (" +
-                    VideoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    VideoEntry._ID + " TEXT PRIMARY KEY," +
                     VideoEntry.COLUMN_NAME + " TEXT, " +
                     VideoEntry.COLUMN_YOUTUBE_KEY + " TEXT, " +
-                    VideoEntry.COLUMN_MOVIE_ID + " INTEGER, " +
+                    VideoEntry.COLUMN_MOVIE_ID + " TEXT, " +
                     " FOREIGN KEY (" + VideoEntry.COLUMN_MOVIE_ID+ ") REFERENCES " +
                     MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
                     " UNIQUE (" + VideoEntry._ID + ", " +
@@ -58,13 +57,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Create review table query
      */
-    //TODO: add API keys
     private final static String CREATE_REVIEW_TABLE_QUERY =
-            "CREATE TABLE " + VideoEntry.TABLE_NAME + " (" +
-                    ReviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "CREATE TABLE " + ReviewEntry.TABLE_NAME + " (" +
+                    ReviewEntry._ID + " TEXT PRIMARY KEY," +
                     ReviewEntry.COLUMN_AUTHOR + " TEXT, " +
                     ReviewEntry.COLUMN_CONTENT + " TEXT, " +
-                    ReviewEntry.COLUMN_MOVIE_ID + " INTEGER, " +
+                    ReviewEntry.COLUMN_MOVIE_ID + " TEXT, " +
                     " FOREIGN KEY (" + ReviewEntry.COLUMN_MOVIE_ID+ ") REFERENCES " +
                     MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
                     " UNIQUE (" + ReviewEntry._ID + ") ON CONFLICT REPLACE);";

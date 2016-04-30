@@ -18,11 +18,11 @@ public interface IMovieDetailsPresenter extends IPresenter {
     void loadData(Bundle bundle);
 
     /**
-     * Invoked when user pressed add to favorites button. It will
+     * Invoked when user pressed favorites button. It will
      * either add or remove movie from favorites list, depending on previous
      * state.
      */
-    void onAddToFavoritesClicked();
+    void onFavoritesClicked();
 
     /**
      * Returns trailer URL

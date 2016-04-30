@@ -4,6 +4,7 @@
 
 package popmovies.udacity.com.model.beans;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,9 +18,10 @@ import popmovies.udacity.com.model.beans.mappers.ReviewMapper;
 public class Review implements Parcelable {
 
     /**
-     * Local database ID
+     * ID
      */
-    protected long mId;
+    @SerializedName("id")
+    protected String mId;
 
     /**
      * Author of review
@@ -36,16 +38,16 @@ public class Review implements Parcelable {
     /**
      * Local database movie ID
      */
-    protected long mMovieId;
+    protected String mMovieId;
 
     public Review() {
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         mId = id;
     }
 
-    public long getId() {
+    public String getId() {
         return mId;
     }
 
@@ -65,11 +67,11 @@ public class Review implements Parcelable {
         return mContent;
     }
 
-    public void setMovieId(long movieId) {
+    public void setMovieId(String movieId) {
         mMovieId = movieId;
     }
 
-    public long getMovieId() {
+    public String getMovieId() {
         return mMovieId;
     }
 
@@ -102,5 +104,9 @@ public class Review implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ContentValues getContentValues() {
+        return ReviewMapper.constructContentValues(this);
     }
 }

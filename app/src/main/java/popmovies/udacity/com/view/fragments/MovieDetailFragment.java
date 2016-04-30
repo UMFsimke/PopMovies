@@ -33,7 +33,7 @@ import popmovies.udacity.com.view.controls.EndlessRecyclerOnScrollListener;
  * Shows details of a movie
  */
 public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
-        implements IMovieDetailsView {
+        implements IMovieDetailsView, MovieDetailsAdapter.OnFavoriteButtonClick {
 
     /**
      * Bundle key for the movie
@@ -127,7 +127,7 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         getActivity().invalidateOptionsMenu();
         MovieDetailsAdapter adapter = (MovieDetailsAdapter) mMovieDetailsList.getAdapter();
         if (adapter == null) {
-            adapter = new MovieDetailsAdapter(movie);
+            adapter = new MovieDetailsAdapter(movie, this);
             mMovieDetailsList.setAdapter(adapter);
             if (mShareActionProvider != null) {
                 setupShare();
@@ -193,5 +193,13 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFavoriteButtonClick() {
+        mPresenter.onFavoritesClicked();
     }
 }

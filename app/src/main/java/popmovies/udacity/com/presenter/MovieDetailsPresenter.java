@@ -4,6 +4,8 @@
 
 package popmovies.udacity.com.presenter;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
 
@@ -12,11 +14,17 @@ import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.api.response.ReviewsResponse;
 import popmovies.udacity.com.model.api.response.VideosResponse;
 import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.model.beans.mappers.MovieMapper;
+import popmovies.udacity.com.model.database.MovieContract;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
 import popmovies.udacity.com.view.fragments.MovieDetailFragment;
 import retrofit2.Response;
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Presenter that controls flow of movie details screen
@@ -87,6 +95,7 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
             return;
         } else if (apiResponse instanceof VideosResponse) {
             mMovie.setVideos(apiResponse.getResults());
+
         }
 
         renderMovie();
@@ -141,9 +150,93 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     }
 
     @Override
-    public void onAddToFavoritesClicked() {
+    public void onFavoritesClicked() {
         if (getView() == null || mMovie == null) return;
 
+        if(mMovie.isFavorite()) {
+            removeMovieFromFavorites();
+            return;
+        }
+
+        addMovieToFavorites();
+    }
+
+    protected void removeMovieFromFavorites() {
+        Observable deleteDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> observer) {
+                if (getView() == null || mMovie == null) return;
+
+                ContentResolver contentResolver = getView().getContext().getContentResolver();
+                contentResolver.delete(MovieContract.MovieEntry.CONTENT_URI,
+                        MovieContract.MovieEntry._ID + " = ?",
+                        new String[]{mMovie.getId()});
+                contentResolver.delete(MovieContract.ReviewEntry.CONTENT_URI,
+                        MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{mMovie.getId()});
+                contentResolver.delete(MovieContract.VideoEntry.CONTENT_URI,
+                        MovieContract.VideoEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{mMovie.getId()});
+
+                if (observer.isUnsubscribed()) return;
+                observer.onNext(true);
+                observer.onCompleted();
+            }
+        });
+
+        deleteDataObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Action1() {
+                    @Override
+                    public void call(Object o) {
+                        if (mMovie == null || getView() == null) return;
+
+                        mMovie.setFavorite(false);
+                        renderMovie();
+                    }
+                });
+    }
+
+    protected void addMovieToFavorites() {
+        Observable addDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> observer) {
+                if (getView() == null || mMovie == null) return;
+
+                ContentResolver contentResolver = getView().getContext().getContentResolver();
+                ContentValues movieContentValues = mMovie.getContentValues();
+                contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieContentValues);
+                ContentValues[] videosContentValues = mMovie.getVideosContentValues();
+                if (videosContentValues != null) {
+                    contentResolver.bulkInsert(MovieContract.VideoEntry.CONTENT_URI, videosContentValues);
+                }
+
+                ContentValues[] reviewsContentValues = mMovie.getReviewsContentValues();
+                if (reviewsContentValues != null) {
+                    contentResolver.bulkInsert(MovieContract.ReviewEntry.CONTENT_URI, reviewsContentValues);
+                }
+
+                if (observer.isUnsubscribed()) return;
+                observer.onNext(true);
+                observer.onCompleted();
+            }
+        });
+
+        addDataObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Action1() {
+                    @Override
+                    public void call(Object o) {
+                        if (mMovie == null || getView() == null) return;
+
+                        mMovie.setFavorite(true);
+                        renderMovie();
+                    }
+                });
     }
 
     @Override

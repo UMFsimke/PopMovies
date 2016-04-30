@@ -29,4 +29,8 @@
     <string name="trailers_title">Trailers</string>
     <string name="reviews_title">Reviews</string>
     <string name="action_share">Share</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+
+    <string name="content_authority">popmovies.udacity.com</string>
 </resources>

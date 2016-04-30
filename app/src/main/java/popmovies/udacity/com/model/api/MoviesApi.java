@@ -90,7 +90,7 @@ public interface MoviesApi {
      */
     @GET(MOVIE_REVIEWS_API_ROUTE)
     Observable<Response<ReviewsResponse>> getMovieReviews(
-            @Path(MOVIE_ID_PARAMETER_NAME) Long movieId,
+            @Path(MOVIE_ID_PARAMETER_NAME) String movieId,
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );
 
@@ -103,7 +103,7 @@ public interface MoviesApi {
      */
     @GET(MOVIE_VIDEOS_API_ROUTE)
     Observable<Response<VideosResponse>> getMovieVideos(
-            @Path(MOVIE_ID_PARAMETER_NAME) Long movieId,
+            @Path(MOVIE_ID_PARAMETER_NAME) String movieId,
             @Query(API_KEY_QUERY_PARAMETER_NAME) String apiKey
     );
 }

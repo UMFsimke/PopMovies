@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +30,16 @@ import popmovies.udacity.com.model.beans.Video;
  * Adapter that renders movie details
  */
 public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    /**
+     * Interface that notifies click on favorite button for a movie
+     */
+    public interface OnFavoriteButtonClick {
+        /**
+         * Invoked when user clicks on a favorite button for a given movie
+         */
+        void onFavoriteButtonClick();
+    }
 
     /**
      * View tyep for movie details
@@ -77,10 +88,17 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     protected Movie mMovie;
 
     /**
+     * Listener that handles click on favorite button
+     */
+    protected OnFavoriteButtonClick mListener;
+
+    /**
      * Creates an instance of an adapter
      * @param movie Movie that will be rendered
+     * @param listener Listener that handles logic when favorite button is clicked
      */
-    public MovieDetailsAdapter(Movie movie) {
+    public MovieDetailsAdapter(Movie movie, OnFavoriteButtonClick listener) {
+        mListener = listener;
         replaceMovie(movie);
     }
 
@@ -231,7 +249,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return rowCount;
     }
 
-    protected static class MovieDetailsViewHolder extends RecyclerView.ViewHolder {
+    protected class MovieDetailsViewHolder extends RecyclerView.ViewHolder {
 
         /**
          * Movie title
@@ -252,6 +270,11 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          * Overview
          */
         @Bind(R.id.movie_detail_overview) protected TextView mOverview;
+
+        /**
+         * Favorites button
+         */
+        @Bind(R.id.favorites) protected Button mFavoritesBtn;
 
         /**
          * Creates view holder for a view
@@ -293,8 +316,18 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .error(R.drawable.ic_stop)
                     .placeholder(R.drawable.ic_action_refresh)
                     .into(mThumnbail);
+            if (movie.isFavorite()) {
+                mFavoritesBtn.setText(R.string.remove_from_favorites);
+            } else {
+                mFavoritesBtn.setText(R.string.add_to_favorites);
+            }
+        }
 
-            itemView.setContentDescription(movie.getTitle());
+        @OnClick(R.id.favorites)
+        protected void onFavoritesClicked() {
+            if (mListener == null) return;
+
+            mListener.onFavoriteButtonClick();
         }
     }
 

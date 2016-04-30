@@ -4,8 +4,10 @@
 
 package popmovies.udacity.com.model.beans;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -26,7 +28,7 @@ public class Movie implements Parcelable {
      * Id
      */
     @SerializedName("id")
-    protected long mId;
+    protected String mId;
 
     /**
      * Title
@@ -68,14 +70,19 @@ public class Movie implements Parcelable {
      */
     protected List<Video> mVideos;
 
+    /**
+     * Defines if movie is favorite
+     */
+    protected boolean mFavorite;
+
     public Movie() {
     }
 
-    public long getId() {
+    public String getId() {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         mId = id;
     }
 
@@ -129,6 +136,11 @@ public class Movie implements Parcelable {
 
     public void setReviews(List<Review> reviews) {
         mReviews = reviews;
+        if (mReviews == null) return;
+
+        for (Review review : mReviews) {
+            review.setMovieId(mId);
+        }
     }
 
     public List<Review> getReviews() {
@@ -137,10 +149,23 @@ public class Movie implements Parcelable {
 
     public void setVideos(List<Video> videos) {
         mVideos = videos;
+        if (mVideos == null) return;
+
+        for (Video video : mVideos) {
+            video.setMovieId(mId);
+        }
     }
 
     public List<Video> getVideos() {
         return mVideos;
+    }
+
+    public void setFavorite(boolean favorite) {
+        mFavorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return mFavorite;
     }
 
     /**
@@ -172,5 +197,33 @@ public class Movie implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ContentValues getContentValues() {
+        return MovieMapper.constructContentValues(this);
+    }
+
+    @Nullable
+    public ContentValues[] getVideosContentValues() {
+        if (mVideos == null || mVideos.size() == 0) return null;
+
+        ContentValues[] contentValues = new ContentValues[mVideos.size()];
+        for (int i = 0; i < mVideos.size(); i++) {
+            contentValues[i] = mVideos.get(i).getContentValues();
+        }
+
+        return contentValues;
+    }
+
+    @Nullable
+    public ContentValues[] getReviewsContentValues() {
+        if (mReviews == null || mReviews.size() == 0) return null;
+
+        ContentValues[] contentValues = new ContentValues[mReviews.size()];
+        for (int i = 0; i < mReviews.size(); i++) {
+            contentValues[i] = mReviews.get(i).getContentValues();
+        }
+
+        return contentValues;
     }
 }

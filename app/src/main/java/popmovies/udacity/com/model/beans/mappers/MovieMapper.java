@@ -4,6 +4,7 @@
 
 package popmovies.udacity.com.model.beans.mappers;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.model.beans.Review;
 import popmovies.udacity.com.model.beans.Video;
+import popmovies.udacity.com.model.database.MovieContract;
 
 /**
  * Defines set of static methods used to create and map {@link Movie}
@@ -24,12 +26,13 @@ public class MovieMapper {
      * @param movie Movie object
      */
     public static void writeToParcel(@NonNull Parcel parcel, @NonNull Movie movie) {
-        parcel.writeLong(movie.getId());
+        parcel.writeString(movie.getId());
         parcel.writeString(movie.getTitle());
         parcel.writeString(movie.getPosterPath());
         parcel.writeString(movie.getPlotOverview());
         parcel.writeDouble(movie.getUserRating());
         parcel.writeString(movie.getReleaseDate());
+        parcel.writeByte(movie.isFavorite() ? (byte) 1 : 0);
         parcel.writeTypedList(movie.getReviews());
         parcel.writeTypedList(movie.getVideos());
     }
@@ -41,18 +44,34 @@ public class MovieMapper {
      */
     public static Movie constructFromParcel(@NonNull Parcel parcel) {
         Movie movie = new Movie();
-        movie.setId(parcel.readLong());
+        movie.setId(parcel.readString());
         movie.setTitle(parcel.readString());
         movie.setPosterPath(parcel.readString());
         movie.setPlotOverview(parcel.readString());
         movie.setUserRating(parcel.readDouble());
         movie.setReleaseDate(parcel.readString());
-
+        movie.setFavorite(parcel.readByte() == 1);
         List<Review> reviews = parcel.createTypedArrayList(Review.CREATOR);
         movie.setReviews(reviews);
 
         List<Video> videos = parcel.createTypedArrayList(Video.CREATOR);
         movie.setVideos(videos);
         return movie;
+    }
+
+    /**
+     * Construct {@link ContentValues} from a given movie
+     * @param movie Movie
+     * @return {@link ContentValues}
+     */
+    public static ContentValues constructContentValues(@NonNull Movie movie) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.MovieEntry._ID, movie.getId());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getPlotOverview());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING, movie.getUserRating());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        return contentValues;
     }
 }
