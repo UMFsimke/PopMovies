@@ -6,10 +6,7 @@ package popmovies.udacity.com.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Display;
 
 import java.io.File;
 import java.io.FileOutputStream;

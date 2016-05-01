@@ -9,8 +9,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import popmovies.udacity.com.model.beans.Gallery;
-
 /**
  * Defines table and column names for the movie database.
  */
