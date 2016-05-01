@@ -71,6 +71,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
      */
     @Override
     protected void onViewCreated() {
+        clearGallery();
         loadMovies();
         getView().showProgressBar();
     }

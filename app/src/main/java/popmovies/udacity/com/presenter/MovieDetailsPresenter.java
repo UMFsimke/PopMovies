@@ -6,8 +6,14 @@ package popmovies.udacity.com.presenter;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.ShareActionProvider;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
@@ -18,6 +24,7 @@ import popmovies.udacity.com.model.beans.mappers.MovieMapper;
 import popmovies.udacity.com.model.database.MovieContract;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
+import popmovies.udacity.com.view.Utils;
 import popmovies.udacity.com.view.fragments.MovieDetailFragment;
 import retrofit2.Response;
 import rx.Observable;
@@ -162,22 +169,13 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     }
 
     protected void removeMovieFromFavorites() {
-        Observable deleteDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable<Boolean> deleteDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> observer) {
                 if (getView() == null || mMovie == null) return;
 
-                ContentResolver contentResolver = getView().getContext().getContentResolver();
-                contentResolver.delete(MovieContract.MovieEntry.CONTENT_URI,
-                        MovieContract.MovieEntry._ID + " = ?",
-                        new String[]{mMovie.getId()});
-                contentResolver.delete(MovieContract.ReviewEntry.CONTENT_URI,
-                        MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{mMovie.getId()});
-                contentResolver.delete(MovieContract.VideoEntry.CONTENT_URI,
-                        MovieContract.VideoEntry.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{mMovie.getId()});
-
+                deleteMovieFromDb();
+                Utils.deleteImageFromDisk(getView().getContext(), mMovie.getId());
                 if (observer.isUnsubscribed()) return;
                 observer.onNext(true);
                 observer.onCompleted();
@@ -188,9 +186,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Action1() {
+                .subscribe(new Action1<Boolean>() {
                     @Override
-                    public void call(Object o) {
+                    public void call(Boolean o) {
                         if (mMovie == null || getView() == null) return;
 
                         mMovie.setFavorite(false);
@@ -199,24 +197,29 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 });
     }
 
+    protected void deleteMovieFromDb() {
+        ContentResolver contentResolver = getView().getContext().getContentResolver();
+        contentResolver.delete(MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry._ID + " = ?",
+                new String[]{mMovie.getId()});
+        contentResolver.delete(MovieContract.ReviewEntry.CONTENT_URI,
+                MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{mMovie.getId()});
+        contentResolver.delete(MovieContract.VideoEntry.CONTENT_URI,
+                MovieContract.VideoEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{mMovie.getId()});
+    }
+
     protected void addMovieToFavorites() {
-        Observable addDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable<Boolean> addDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> observer) {
                 if (getView() == null || mMovie == null) return;
 
-                ContentResolver contentResolver = getView().getContext().getContentResolver();
-                ContentValues movieContentValues = mMovie.getContentValues();
-                contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieContentValues);
-                ContentValues[] videosContentValues = mMovie.getVideosContentValues();
-                if (videosContentValues != null) {
-                    contentResolver.bulkInsert(MovieContract.VideoEntry.CONTENT_URI, videosContentValues);
-                }
-
-                ContentValues[] reviewsContentValues = mMovie.getReviewsContentValues();
-                if (reviewsContentValues != null) {
-                    contentResolver.bulkInsert(MovieContract.ReviewEntry.CONTENT_URI, reviewsContentValues);
-                }
+                saveMovieToDb();
+                Utils.saveBitmapToJpeg(getView().getContext(),
+                        mMovie.getId(),
+                        getView().getMovieBitmap());
 
                 if (observer.isUnsubscribed()) return;
                 observer.onNext(true);
@@ -224,19 +227,35 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
             }
         });
 
+
         addDataObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Action1() {
+                .subscribe(new Action1<Boolean>() {
                     @Override
-                    public void call(Object o) {
+                    public void call(Boolean b) {
                         if (mMovie == null || getView() == null) return;
 
                         mMovie.setFavorite(true);
                         renderMovie();
                     }
                 });
+    }
+
+    protected void saveMovieToDb() {
+        ContentResolver contentResolver = getView().getContext().getContentResolver();
+        ContentValues movieContentValues = mMovie.getContentValues();
+        contentResolver.insert(MovieContract.MovieEntry.CONTENT_URI, movieContentValues);
+        ContentValues[] videosContentValues = mMovie.getVideosContentValues();
+        if (videosContentValues != null) {
+            contentResolver.bulkInsert(MovieContract.VideoEntry.CONTENT_URI, videosContentValues);
+        }
+
+        ContentValues[] reviewsContentValues = mMovie.getReviewsContentValues();
+        if (reviewsContentValues != null) {
+            contentResolver.bulkInsert(MovieContract.ReviewEntry.CONTENT_URI, reviewsContentValues);
+        }
     }
 
     @Override

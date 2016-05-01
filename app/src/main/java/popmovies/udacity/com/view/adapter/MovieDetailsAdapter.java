@@ -6,6 +6,8 @@ package popmovies.udacity.com.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +30,7 @@ import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.model.beans.Review;
 import popmovies.udacity.com.model.beans.Video;
+import popmovies.udacity.com.view.Utils;
 
 /**
  * Adapter that renders movie details
@@ -91,6 +97,11 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * Listener that handles click on favorite button
      */
     protected OnFavoriteButtonClick mListener;
+
+    /**
+     * Poster bitmap
+     */
+    protected Bitmap mMovieBitmap;
 
     /**
      * Creates an instance of an adapter
@@ -190,6 +201,11 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     && mMovie.getReviews() != null && mMovie.getReviews().size() > 0;
         }
     }
+
+    public Bitmap getMovieBitmap() {
+        return mMovieBitmap;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -309,17 +325,52 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ratingString);
 
             mMovieInfo.setText(movieInfo);
-            Picasso.with(mThumnbail.getContext().getApplicationContext())
-                    .load(movie.getMoviePosterFullUrl())
-                    .fit()
-                    .centerCrop()
-                    .error(R.drawable.ic_stop)
-                    .placeholder(R.drawable.ic_action_refresh)
-                    .into(mThumnbail);
+            loadMoviePoster(movie);
+
             if (movie.isFavorite()) {
                 mFavoritesBtn.setText(R.string.remove_from_favorites);
             } else {
                 mFavoritesBtn.setText(R.string.add_to_favorites);
+            }
+        }
+
+        void loadMoviePoster(Movie movie) {
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    mMovieBitmap = bitmap;
+                    mThumnbail.setImageBitmap(mMovieBitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                    mThumnbail.setImageDrawable(errorDrawable);
+                    mMovieBitmap = null;
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    mThumnbail.setImageDrawable(placeHolderDrawable);
+                    mMovieBitmap = null;
+                }
+            };
+
+            String filePath = Utils.getFullImagePathIfExists(
+                    mThumnbail.getContext(), movie.getId());
+            if (filePath == null) {
+                Picasso.with(mThumnbail.getContext().getApplicationContext())
+                        .load(movie.getMoviePosterFullUrl())
+                        .error(R.drawable.ic_stop)
+                        .placeholder(R.drawable.ic_action_refresh)
+                        .into(target);
+            } else {
+                Picasso.with(mThumnbail.getContext().getApplicationContext())
+                        .load(new File(filePath))
+                        .fit()
+                        .centerCrop()
+                        .error(R.drawable.ic_stop)
+                        .placeholder(R.drawable.ic_action_refresh)
+                        .into(mThumnbail);
             }
         }
 

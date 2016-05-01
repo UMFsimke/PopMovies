@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,6 +20,7 @@ import butterknife.OnClick;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Gallery;
 import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.view.Utils;
 import popmovies.udacity.com.view.controls.GalleryThumbnail;
 
 /**
@@ -112,16 +116,33 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         public void render(Movie movie) {
             if (movie == null) return;
 
-            Picasso.with(mThumnbail.getContext().getApplicationContext())
-                    .load(movie.getMoviePosterFullUrl())
-                    .fit()
+            loadThumbnail(movie);
+            itemView.setTag(movie);
+            itemView.setContentDescription(movie.getTitle());
+        }
+
+        /**
+         * Loads movie poster from disk or network
+         * @param movie Movie
+         */
+        void loadThumbnail(Movie movie) {
+            String filePath = Utils.getFullImagePathIfExists(
+                    mThumnbail.getContext(), movie.getId());
+            Picasso picasso = Picasso.with(mThumnbail.getContext().getApplicationContext());
+            RequestCreator creator;
+            if (filePath == null) {
+                creator = picasso
+                        .load(movie.getMoviePosterFullUrl());
+            } else {
+                creator = picasso
+                        .load(new File(filePath));
+            }
+
+            creator.fit()
                     .centerCrop()
                     .error(R.drawable.ic_stop)
                     .placeholder(R.drawable.ic_action_refresh)
                     .into(mThumnbail);
-
-            itemView.setTag(movie);
-            itemView.setContentDescription(movie.getTitle());
         }
     }
 }

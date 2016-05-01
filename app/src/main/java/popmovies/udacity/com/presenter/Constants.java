@@ -12,5 +12,10 @@ public class Constants {
     /**
      * API key
      */
-    public static final String API_KEY = "ENTER YOUR API KEY HERE";
+    public static final String API_KEY = "ENTER YOUR API HERE";
+
+    /**
+     * JPEG extension for a file
+     */
+    public static final String JPEG_EXTENSION = ".jpg";
 }

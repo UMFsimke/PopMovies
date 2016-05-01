@@ -5,6 +5,7 @@
 package popmovies.udacity.com.presenter.interfaces.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import popmovies.udacity.com.model.beans.Movie;
 
@@ -18,4 +19,10 @@ public interface IMovieDetailsView extends IView {
      * @param movie Movie to render
      */
     void renderMovie(Movie movie);
+
+    /**
+     * Returns rendered bitmap of a movie
+     * @return {@link Bitmap}
+     */
+    Bitmap getMovieBitmap();
 }
