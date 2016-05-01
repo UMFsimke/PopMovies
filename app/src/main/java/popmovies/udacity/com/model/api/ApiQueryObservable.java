@@ -7,7 +7,6 @@ package popmovies.udacity.com.model.api;
 import android.support.annotation.NonNull;
 
 import popmovies.udacity.com.model.api.response.BaseResponse;
-import popmovies.udacity.com.presenter.interfaces.view.IView;
 import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;

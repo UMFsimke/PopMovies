@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ */
+
 package popmovies.udacity.com.model.annotations;
 
 import java.lang.annotation.Retention;

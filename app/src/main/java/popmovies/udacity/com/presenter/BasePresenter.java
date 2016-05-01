@@ -20,7 +20,6 @@ import popmovies.udacity.com.presenter.interfaces.presenter.IPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IView;
 import retrofit2.Response;
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;

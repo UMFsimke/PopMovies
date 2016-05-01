@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ */
+
 package popmovies.udacity.com.view.fragments;
 
 import android.os.Bundle;

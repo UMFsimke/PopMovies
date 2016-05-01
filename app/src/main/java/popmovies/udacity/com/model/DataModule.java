@@ -4,7 +4,6 @@
 
 package popmovies.udacity.com.model;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
