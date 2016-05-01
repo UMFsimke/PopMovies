@@ -18,18 +18,29 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
+    /**
+     * Application
+     */
     private final Application mApp;
 
     public AppModule(Application app) {
         mApp = app;
     }
 
+    /**
+     * Provides {@link Application} object
+     * @return {@link Application}
+     */
     @Provides
     @Singleton
     public Application provideApplication() {
         return mApp;
     }
 
+    /**
+     * Provides {@link Context}
+     * @return {@link Context}
+     */
     @Provides
     public Context provideContext() {
         return mApp.getApplicationContext();

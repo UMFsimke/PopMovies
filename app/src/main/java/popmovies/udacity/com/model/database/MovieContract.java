@@ -73,10 +73,6 @@ public class MovieContract {
          */
         public static final String COLUMN_MOVIE_ID = "movie_id";
 
-        public static String getMovieIdFromUri(Uri uri) {
-            return uri.getQueryParameter(COLUMN_MOVIE_ID);
-        }
-
         public static Uri buildReviewUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
@@ -115,10 +111,6 @@ public class MovieContract {
          * Column for foreign movie ID key
          */
         public static final String COLUMN_MOVIE_ID = "movie_id";
-
-        public static String getMovieIdFromUri(Uri uri) {
-            return uri.getQueryParameter(COLUMN_MOVIE_ID);
-        }
 
         public static Uri buildVideoUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

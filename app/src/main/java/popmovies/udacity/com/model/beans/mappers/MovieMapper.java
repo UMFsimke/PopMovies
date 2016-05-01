@@ -15,19 +15,46 @@ import popmovies.udacity.com.model.beans.Movie;
 import popmovies.udacity.com.model.beans.Review;
 import popmovies.udacity.com.model.beans.Video;
 import popmovies.udacity.com.model.database.MovieContract;
+import popmovies.udacity.com.presenter.Constants;
 
 /**
  * Defines set of static methods used to create and map {@link Movie}
  */
 public class MovieMapper {
 
+    /**
+     * Movie ID column index
+     */
     private static final int COLUMN_MOVIE_ID = 0;
+
+    /**
+     * Movie title column index
+     */
     private static final int COLUMN_TITLE = 1;
+
+    /**
+     * Movie poster column index
+     */
     private static final int COLUMN_POSTER_PATH = 2;
+
+    /**
+     * Movie overview column index
+     */
     private static final int COLUMN_OVERVIEW = 3;
+
+    /**
+     * Movie user rating column index
+     */
     private static final int COLUMN_USER_RATING = 4;
+
+    /**
+     * Movie release date column index
+     */
     private static final int COLUMN_RELEASE_DATE = 5;
 
+    /**
+     * Columns for a database query
+     */
     public static final String[] MOVIE_COLUMNS = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_TITLE,
@@ -49,7 +76,7 @@ public class MovieMapper {
         parcel.writeString(movie.getPlotOverview());
         parcel.writeDouble(movie.getUserRating());
         parcel.writeString(movie.getReleaseDate());
-        parcel.writeByte(movie.isFavorite() ? (byte) 1 : 0);
+        parcel.writeByte(movie.isFavorite() ? Constants.BOOLEAN_TRUE : Constants.BOOLEAN_FALSE);
         parcel.writeTypedList(movie.getReviews());
         parcel.writeTypedList(movie.getVideos());
     }
@@ -67,7 +94,7 @@ public class MovieMapper {
         movie.setPlotOverview(parcel.readString());
         movie.setUserRating(parcel.readDouble());
         movie.setReleaseDate(parcel.readString());
-        movie.setFavorite(parcel.readByte() == 1);
+        movie.setFavorite(parcel.readByte() == Constants.BOOLEAN_TRUE);
         List<Review> reviews = parcel.createTypedArrayList(Review.CREATOR);
         movie.setReviews(reviews);
 
@@ -92,6 +119,12 @@ public class MovieMapper {
         return contentValues;
     }
 
+    /**
+     * Constructs a movie from a cursor
+     * @param cursor {@link Cursor}
+     * @param movie {@link Movie} object to save data to
+     * @return Movie with data from cursor
+     */
     public static Movie constructFromCursor(@NonNull Cursor cursor, @NonNull Movie movie) {
         movie.setId(cursor.getString(COLUMN_MOVIE_ID));
         movie.setTitle(cursor.getString(COLUMN_TITLE));

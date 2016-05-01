@@ -17,11 +17,29 @@ import popmovies.udacity.com.model.database.MovieContract;
  */
 public class VideoMapper {
 
+    /**
+     * ID column index
+     */
     private static final int COLUMN_ID = 0;
+
+    /**
+     * Name column index
+     */
     private static final int COLUMN_NAME = 1;
+
+    /**
+     * Youtube key column index
+     */
     private static final int COLUMN_YOUTUBE_KEY = 2;
+
+    /**
+     * Movie ID column index
+     */
     private static final int COLUMN_MOVIE_ID = 3;
 
+    /**
+     * Columns for query
+     */
     public static final String[] VIDEO_COLUMNS = {
             MovieContract.VideoEntry.TABLE_NAME + "." + MovieContract.VideoEntry._ID,
             MovieContract.VideoEntry.COLUMN_NAME,
@@ -69,6 +87,12 @@ public class VideoMapper {
         return contentValues;
     }
 
+    /**
+     * Constructs a video from a cursor
+     * @param cursor {@link Cursor}
+     * @param video {@link Video} object to save data to
+     * @return Video with data from cursor
+     */
     public static Video constructFromCursor(@NonNull Cursor cursor, @NonNull Video video) {
         video.setId(cursor.getString(COLUMN_ID));
         video.setName(cursor.getString(COLUMN_NAME));

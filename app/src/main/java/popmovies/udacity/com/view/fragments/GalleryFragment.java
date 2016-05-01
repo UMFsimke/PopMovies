@@ -33,17 +33,26 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
      */
     protected EndlessRecyclerOnScrollListener mScrollListener;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void inject() {
         PopMovies.getInstance().graph().inject(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     protected Integer getLayout() {
         return R.layout.fragment_gallery;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onPrepareLayoutFinished() {
         initRecyclerView();
@@ -67,6 +76,10 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
         mGallery.getRecycledViewPool().setMaxRecycledViews(0, 1000);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -100,6 +113,9 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
         adapter.replaceItems(gallery);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void setContentVisibility(int visibility) {
         mGallery.setVisibility(visibility);

@@ -67,10 +67,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
                     " UNIQUE (" + ReviewEntry._ID + ") ON CONFLICT REPLACE);";
 
+    /**
+     * {@inheritDoc}
+     */
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_FAVORITE_MOVIES_TABLE_QUERY);
@@ -78,6 +84,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_VIDEO_TABLE_QUERY);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ReviewEntry.TABLE_NAME);

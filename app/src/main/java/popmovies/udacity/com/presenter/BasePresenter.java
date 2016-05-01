@@ -54,6 +54,9 @@ public abstract class BasePresenter<V extends IView> implements IPresenter {
         mRestoredState = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T extends IView> void setView(T view) {
         mView = (V) view;

@@ -68,6 +68,9 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         return fragment;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +142,9 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         adapter.replaceMovie(movie);
     }
 
+    /**
+     * Setups share action provider if trailer URL is available
+     */
     protected void setupShare() {
         String trailerUrl = mPresenter.getTrailerUrl();
         if (trailerUrl != null) {
@@ -146,6 +152,10 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         }
     }
 
+    /**
+     * Creates intent for share action
+     * @return {@link Intent}
+     */
     protected Intent createShareTrailerIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
@@ -203,12 +213,18 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         mPresenter.onFavoritesClicked();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Bitmap getMovieBitmap() {
         return ((MovieDetailsAdapter) mMovieDetailsList.getAdapter())
                 .getMovieBitmap();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

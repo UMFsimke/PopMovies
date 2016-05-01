@@ -143,6 +143,10 @@ public class Movie implements Parcelable {
         return String.format("%s%s", MOVIE_POSTER_ENDPOINT, mPosterPath);
     }
 
+    /**
+     * Sets reviews and adds movie ID to each review
+     * @param reviews List of reviews to set for the movie
+     */
     public void setReviews(List<Review> reviews) {
         mReviews = reviews;
         if (mReviews == null) return;
@@ -156,6 +160,10 @@ public class Movie implements Parcelable {
         return mReviews;
     }
 
+    /**
+     * Sets the videos and adds movie ID for each movie
+     * @param videos List of videos to set for the movie
+     */
     public void setVideos(List<Video> videos) {
         mVideos = videos;
         if (mVideos == null) return;
@@ -208,10 +216,18 @@ public class Movie implements Parcelable {
         return 0;
     }
 
+    /**
+     * Returns content values for a given movie
+     * @return {@link ContentValues} for a movie
+     */
     public ContentValues getContentValues() {
         return MovieMapper.constructContentValues(this);
     }
 
+    /**
+     * Returns content values array for trailers
+     * @return Array of {@link ContentValues} for trailers, or <code>null</code> if empty
+     */
     @Nullable
     public ContentValues[] getVideosContentValues() {
         if (mVideos == null || mVideos.size() == 0) return null;
@@ -224,6 +240,10 @@ public class Movie implements Parcelable {
         return contentValues;
     }
 
+    /**
+     * Returns content values array for reviews
+     * @return Array of {@link ContentValues} for reviews, or <code>null</code> if empty
+     */
     @Nullable
     public ContentValues[] getReviewsContentValues() {
         if (mReviews == null || mReviews.size() == 0) return null;

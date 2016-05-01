@@ -69,6 +69,10 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         return rootView;
     }
 
+    /**
+     * Returns layout ID from R.layout resources for given fragment
+     * @return Layout ID resource
+     */
     @NonNull
     protected abstract Integer getLayout();
 

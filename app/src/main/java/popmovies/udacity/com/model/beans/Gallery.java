@@ -35,6 +35,11 @@ public class Gallery implements Parcelable {
             return values()[ordinal];
         }
 
+        /**
+         * Returns {@link GalleryType} for a given string
+         * @param ordinalString String to compare to
+         * @return {@link GalleryType} for given string, {@link #POPULAR} by default
+         */
         public static GalleryType fromString(String ordinalString) {
             if (ordinalString == null) return POPULAR;
 

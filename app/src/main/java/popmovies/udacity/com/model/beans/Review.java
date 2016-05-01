@@ -115,6 +115,10 @@ public class Review implements Parcelable {
         return 0;
     }
 
+    /**
+     * Creates {@link ContentValues} for a given review
+     * @return {@link ContentValues} for review
+     */
     public ContentValues getContentValues() {
         return ReviewMapper.constructContentValues(this);
     }

@@ -96,6 +96,9 @@ public class PopMoviesActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Refreshes the content of fragments
+     */
     protected void refresh() {
         GalleryFragment galleryFragment = getGalleryFragment();
         galleryFragment.refresh();
@@ -133,6 +136,9 @@ public class PopMoviesActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTabletMode() {
         return mIsTablet;

@@ -17,11 +17,29 @@ import popmovies.udacity.com.model.database.MovieContract;
  */
 public class ReviewMapper {
 
+    /**
+     * ID column index
+     */
     private static final int COLUMN_ID = 0;
+
+    /**
+     * Author column index
+     */
     private static final int COLUMN_AUTHOR = 1;
+
+    /**
+     * Content column index
+     */
     private static final int COLUMN_CONTENT = 2;
+
+    /**
+     * Movie ID column index
+     */
     private static final int COLUMN_MOVIE_ID = 3;
 
+    /**
+     * Columns for query
+     */
     public static final String[] REVIEW_COLUMNS = {
             MovieContract.ReviewEntry.TABLE_NAME + "." + MovieContract.ReviewEntry._ID,
             MovieContract.ReviewEntry.COLUMN_AUTHOR,
@@ -69,6 +87,12 @@ public class ReviewMapper {
         return contentValues;
     }
 
+    /**
+     * Constructs a review from a cursor
+     * @param cursor {@link Cursor}
+     * @param review {@link Review} object to save data to
+     * @return Review with data from cursor
+     */
     public static Review constructFromCursor(@NonNull Cursor cursor, @NonNull Review review) {
         review.setId(cursor.getString(COLUMN_ID));
         review.setAuthor(cursor.getString(COLUMN_AUTHOR));

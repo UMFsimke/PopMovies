@@ -105,6 +105,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         loadMovieFromDatabase();
     }
 
+    /**
+     * Initiates loading of a movie from a DB
+     */
     protected void loadMovieFromDatabase() {
         LoaderManager manager = ((AppCompatActivity) getView().getContext())
                 .getSupportLoaderManager();
@@ -136,6 +139,12 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         makeApiCall(retrofitObservable);
     }
 
+    /**
+     * Callback for successful API response. Updates the movie with the response and triggers
+     * rendering in the end.
+     * @param apiResponse API response object
+     * @param <T> Response type
+     */
     @Override
     protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
         if (apiResponse instanceof ReviewsResponse) {
@@ -194,10 +203,17 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         outState.putParcelable(EXTRA_MOVIE, mMovie);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onScreenResumed() {
     }
 
+    /**
+     * Triggered when usr clicks on favorite button. Adds or removes movie from favorites
+     * database depending on previus state.
+     */
     @Override
     public void onFavoritesClicked() {
         if (getView() == null || mMovie == null) return;
@@ -210,6 +226,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         addMovieToFavorites();
     }
 
+    /**
+     * Removes movie, reviews, videos and poster from local storage
+     */
     protected void removeMovieFromFavorites() {
         Observable<Boolean> deleteDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -239,6 +258,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 });
     }
 
+    /**
+     * Deletes movie, reviews and trailers from DB
+     */
     protected void deleteMovieFromDb() {
         ContentResolver contentResolver = getView().getContext().getContentResolver();
         contentResolver.delete(MovieContract.MovieEntry.CONTENT_URI,
@@ -252,6 +274,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 new String[]{mMovie.getId()});
     }
 
+    /**
+     * Adds movie, reviews, trailers and poster to local storage
+     */
     protected void addMovieToFavorites() {
         Observable<Boolean> addDataObservable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -285,6 +310,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 });
     }
 
+    /**
+     * Saves movie, reviews and trailers to DB
+     */
     protected void saveMovieToDb() {
         ContentResolver contentResolver = getView().getContext().getContentResolver();
         ContentValues movieContentValues = mMovie.getContentValues();
@@ -300,6 +328,10 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         }
     }
 
+    /**
+     * Returns first trailer URL if possible
+     * @return URL or <code>null</code> if there are no trailers
+     */
     @Override
     public String getTrailerUrl() {
         if (doesMovieHasTrailers()) {
@@ -309,11 +341,17 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean doesMovieHasTrailers() {
         return mMovie != null && mMovie.getVideos() != null && mMovie.getVideos().size() > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder;
@@ -351,6 +389,12 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
                 sortOrder);
     }
 
+    /**
+     * Adds reviews and trailers to the movie if in favorites database and renders the data.
+     * If movie is not in favorites then API calls are initiated
+     * @param loader Loader
+     * @param cursor Cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (getView() == null) return;
@@ -401,6 +445,9 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         renderMovie();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }

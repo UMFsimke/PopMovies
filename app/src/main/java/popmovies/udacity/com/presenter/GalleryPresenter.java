@@ -86,6 +86,9 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         getView().showProgressBar();
     }
 
+    /**
+     * Loads movies if {@link Gallery} is initialized and has more in context of pages
+     */
     @Override
     public void loadMoreMovies() {
         if (mGallery != null && mGallery.hasMore()) {
@@ -94,7 +97,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     }
 
     /**
-     * Loads additional page of movies from API
+     * Loads additional movies
      */
     protected void loadMovies() {
         switch (mSortBy) {
@@ -110,24 +113,36 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         }
     }
 
+    /**
+     * Invokes API call for loading popular movies
+     */
     protected void loadPopularMovies() {
         Observable<Response<MoviesResponse>> retrofitObservable
                 = mApi.getPopularMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
         makeApiCall(retrofitObservable);
     }
 
+    /**
+     * Invokes API call for loading top rated movies
+     */
     protected void loadTopRatedMovies() {
         Observable<Response<MoviesResponse>> retrofitObservable
-        =mApi.getTopRatedMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
+                = mApi.getTopRatedMovies(Constants.API_KEY, mGallery.getNextPageToLoad());
         makeApiCall(retrofitObservable);
     }
 
+    /**
+     * Initiates call for loading favorite movies from DB
+     */
     protected void loadFavoriteMovies() {
         LoaderManager manager = ((AppCompatActivity) getView().getContext())
                 .getSupportLoaderManager();
         manager.restartLoader(MOVIES_LOADER, null, this);
     }
 
+    /**
+     * When response is obtained from API it renders it on screen
+     */
     @Override
     protected <T extends BaseResponse> void onApiResponse(T apiResponse) {
         MoviesResponse moviesResponse = (MoviesResponse) apiResponse;
@@ -136,6 +151,10 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         getView().hideProgressBar();
     }
 
+    /**
+     * Updates local gallery object with API data
+     * @param response API response for movies
+     */
     protected void updateGalleryWithResponse(MoviesResponse response) {
         mGallery.addMovies(response.getResults());
         mGallery.setLastLoadedPage(response.getCurrentPage());
@@ -143,6 +162,9 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
                 response.getLastPage());
     }
 
+    /**
+     * Renders gallery to the view
+     */
     protected void renderGallery() {
         getView().renderGallery(mGallery);
     }
@@ -190,6 +212,10 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         }
     }
 
+    /**
+     * Checks if user changed criteria for showing movies
+     * @return <code>true</code> if user changed criteria, <code>false</code> otherwise
+     */
     protected boolean isSortByChanged() {
         Gallery.GalleryType savedGalleryType = PopMovies.getInstance()
                 .graph()
@@ -197,21 +223,33 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         return mSortBy.ordinal() != savedGalleryType.ordinal();
     }
 
+    /**
+     * Resets gallery
+     */
     protected void clearGallery() {
         mGallery = new Gallery();
     }
 
+    /**
+     * Changes current sort criteria value
+     */
     protected void changeSortBy() {
         mSortBy = PopMovies.getInstance()
                 .graph()
                 .getSavedGalleryType();
     }
 
+    /**
+     * Reloads data of movies and replaces them with new ones
+     */
     protected void reloadData() {
         getView().resetScroll();
         onScreenCreated();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = MovieContract.MovieEntry._ID + " ASC";
@@ -225,6 +263,11 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
                 sortOrder);
     }
 
+    /**
+     * Renders list of favorite movies on screen when loading from DB is finished
+     * @param loader Loader
+     * @param cursor Cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (getView() == null || mSortBy != Gallery.GalleryType.FAVORITES) return;
@@ -251,6 +294,9 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         getView().hideProgressBar();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }

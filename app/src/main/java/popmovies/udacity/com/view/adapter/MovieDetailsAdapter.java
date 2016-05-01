@@ -151,6 +151,9 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getItemViewType(int position) {
         if (shouldShowPlaceholder()) {
@@ -176,18 +179,38 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return VIEW_TYPE_REVIEW;
     }
 
+    /**
+     * Checks if placeholder should be shown
+     * @return <code>true</code> if placeholder should be shown, <code>false</code> otherwise
+     */
     boolean shouldShowPlaceholder() {
         return mMovie == null;
     }
 
+    /**
+     * Checks if movie details should be shown on given position
+     * @param position Position to render
+     * @return <code>true</code> if movie details should be rendered, <code>false</code> otherwise
+     */
     boolean shouldShowMovieDetails(int position) {
         return position == 0 && mMovie != null;
     }
 
+    /**
+     * Checks if trailers section header should be shown on given position
+     * @param position Position to render
+     * @return <code>true</code> if trailers section header
+     * should be rendered, <code>false</code> otherwise
+     */
     boolean shouldShowTrailersSectionHeader(int position) {
         return position == 1 && mMovie.getVideos() != null && mMovie.getVideos().size() > 0;
     }
 
+    /**
+     * Checks if trailer should be shown on given position
+     * @param position Position to render
+     * @return <code>true</code> if trailer should be rendered, <code>false</code> otherwise
+     */
     boolean shouldShowTrailer(int position) {
         int videosSize = mMovie == null || mMovie.getVideos() == null ?
                 0 : mMovie.getVideos().size();
@@ -195,6 +218,12 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position > 1 && position < bottomTrailerDelimiter;
     }
 
+    /**
+     * Checks if reviews section header should be shown on given position
+     * @param position Position to render
+     * @return <code>true</code> if reviews section
+     * header should be rendered, <code>false</code> otherwise
+     */
     boolean shouldShowReviewSectionHeader(int position) {
         int reviewsSize = mMovie == null || mMovie.getReviews() == null ?
                 0 : mMovie.getReviews().size();
@@ -206,6 +235,10 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /**
+     * Returns rendered bitmap for a poster
+     * @return {@link Bitmap} of a poster
+     */
     public Bitmap getMovieBitmap() {
         return mMovieBitmap;
     }
@@ -236,6 +269,11 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /**
+     * Returns review to render on given position
+     * @param position Position to render
+     * @return {@link Review} to render
+     */
     Review getReviewByPosition(int position) {
         if (mMovie.getVideos() == null || mMovie.getVideos().size() == 0) {
             return mMovie.getReviews().get(position - FIRST_VIDEO_OFFSET_POSITION);
@@ -246,12 +284,17 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /**
+     * Returns video to render on given position
+     * @param position Position to render
+     * @return {@link Video} to render
+     */
     Video getVideoByPosition(int position) {
         return mMovie.getVideos().get(position - FIRST_VIDEO_OFFSET_POSITION);
     }
 
     /**
-     * {@inheritDoc}
+     * Returns number of rows to render, including headers of videos and reviews sections.
      */
     @Override
     public int getItemCount() {
@@ -338,6 +381,10 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
+        /**
+         * Loads poster of a movie in an image view
+         * @param movie Movie to render the poster for
+         */
         void loadMoviePoster(Movie movie) {
             Target target = new Target() {
                 @Override
@@ -378,6 +425,9 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
+        /**
+         * Invoked when user clicks on favorite button
+         */
         @OnClick(R.id.favorites)
         protected void onFavoritesClicked() {
             if (mListener == null) return;
@@ -473,6 +523,10 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mTrailerName.setTag(trailer.getYoutubeUrl());
         }
 
+        /**
+         * Plays trailer if clicked
+         * @param v View of trailer
+         */
         @OnClick(R.id.trailer_name)
         void onTrailerClicked(View v) {
             String url = (String) mTrailerName.getTag();

@@ -18,4 +18,14 @@ public class Constants {
      * JPEG extension for a file
      */
     public static final String JPEG_EXTENSION = ".jpg";
+
+    /**
+     * True value representation in number
+     */
+    public static final byte BOOLEAN_TRUE = 1;
+
+    /**
+     * False value representation in number
+     */
+    public static final byte BOOLEAN_FALSE = 0;
 }

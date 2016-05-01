@@ -29,7 +29,16 @@ import popmovies.udacity.com.view.Utils;
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder>{
 
     public interface OnMovieClickedListener {
+        /**
+         * Invoked when user clicks on a movie
+         * @param movie Movie that has been clicked on
+         */
         void onMovieClicked(Movie movie);
+
+        /**
+         * Checks if app is run on tablet
+         * @return <code>true</code> if app is run on tablet, <code>false</code> otherwise
+         */
         boolean isTabletMode();
     }
 
@@ -84,6 +93,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         holder.render(mGallery.getMovies().get(position), position == mSelectedItem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getItemId(int position) {
         return position;

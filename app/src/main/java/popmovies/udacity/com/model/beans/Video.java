@@ -125,6 +125,10 @@ public class Video implements Parcelable {
         return 0;
     }
 
+    /**
+     * Creates {@link ContentValues} for a given video
+     * @return {@link ContentValues} for video
+     */
     public ContentValues getContentValues() {
         return VideoMapper.constructContentValues(this);
     }
