@@ -13,17 +13,7 @@ import popmovies.udacity.com.model.beans.Review;
  */
 public class ReviewsResponse extends BasePaginatedResponse<Review> {
 
-    /**
-     * Movie id
-     */
-    @SerializedName("id")
-    String mMovieId;
-
     public ReviewsResponse() {
         super();
-    }
-
-    public String getMovieId() {
-        return mMovieId;
     }
 }

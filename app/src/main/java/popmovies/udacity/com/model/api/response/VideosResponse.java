@@ -13,17 +13,8 @@ import popmovies.udacity.com.model.beans.Video;
  */
 public class VideosResponse extends BaseResponse<Video> {
 
-    /**
-     * Movie ID
-     */
-    @SerializedName("id")
-    String mMovieId;
-
     public VideosResponse() {
         super();
     }
 
-    public String getMovieId() {
-        return mMovieId;
-    }
 }

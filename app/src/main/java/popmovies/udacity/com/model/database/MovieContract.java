@@ -52,8 +52,6 @@ public class MovieContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
 
         /**
          * Table name
@@ -74,11 +72,6 @@ public class MovieContract {
          * Column for foreign movie ID key
          */
         public static final String COLUMN_MOVIE_ID = "movie_id";
-
-        public static Uri buildReviewsWithMovieId(long movieId) {
-            return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(COLUMN_MOVIE_ID, Long.toString(movieId)).build();
-        }
 
         public static String getMovieIdFromUri(Uri uri) {
             return uri.getQueryParameter(COLUMN_MOVIE_ID);
@@ -102,8 +95,6 @@ public class MovieContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIDEO;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIDEO;
 
         /**
          * Table name
@@ -124,11 +115,6 @@ public class MovieContract {
          * Column for foreign movie ID key
          */
         public static final String COLUMN_MOVIE_ID = "movie_id";
-
-        public static Uri buildVideosWithMovieId(long movieId) {
-            return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(COLUMN_MOVIE_ID, Long.toString(movieId)).build();
-        }
 
         public static String getMovieIdFromUri(Uri uri) {
             return uri.getQueryParameter(COLUMN_MOVIE_ID);
@@ -152,8 +138,6 @@ public class MovieContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
 
         /**
          * Table name

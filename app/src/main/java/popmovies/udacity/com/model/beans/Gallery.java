@@ -92,29 +92,6 @@ public class Gallery implements Parcelable {
         mMoviesList.addAll(movies);
     }
 
-    /**
-     * Adds a movie at the end of the existing collection of movies
-     * @param movie Movie that should be added to the gallery
-     */
-    public void addMovie(Movie movie) {
-        if (mMoviesList == null) {
-            mMoviesList = new ArrayList<>();
-        }
-
-        if (movie == null) return;
-
-        mMoviesList.add(movie);
-    }
-
-    /**
-     * Clears the list of movies in the gallery
-     */
-    public void clear() {
-        if (mMoviesList == null) return;
-
-        mMoviesList.clear();
-    }
-
     public List<Movie> getMovies() {
         return mMoviesList;
     }
