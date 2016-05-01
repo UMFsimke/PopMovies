@@ -189,16 +189,20 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     boolean shouldShowTrailer(int position) {
-        int bottomTrailerDelimiter = FIRST_VIDEO_OFFSET_POSITION + mMovie.getVideos().size();
+        int videosSize = mMovie == null || mMovie.getVideos() == null ?
+                0 : mMovie.getVideos().size();
+        int bottomTrailerDelimiter = FIRST_VIDEO_OFFSET_POSITION + videosSize;
         return position > 1 && position < bottomTrailerDelimiter;
     }
 
     boolean shouldShowReviewSectionHeader(int position) {
+        int reviewsSize = mMovie == null || mMovie.getReviews() == null ?
+                0 : mMovie.getReviews().size();
         if (mMovie.getVideos() == null || mMovie.getVideos().size() == 0) {
-            return position == 1 && mMovie.getReviews() != null && mMovie.getReviews().size() > 0;
+            return position == 1 && mMovie.getReviews() != null && reviewsSize > 0;
         } else {
             return (position == FIRST_VIDEO_OFFSET_POSITION + mMovie.getVideos().size())
-                    && mMovie.getReviews() != null && mMovie.getReviews().size() > 0;
+                    && mMovie.getReviews() != null && reviewsSize > 0;
         }
     }
 

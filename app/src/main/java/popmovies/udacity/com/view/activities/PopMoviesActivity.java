@@ -74,6 +74,10 @@ public class PopMoviesActivity extends AppCompatActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (mIsTablet) {
+            return true;
+        }
+
         getMenuInflater().inflate(R.menu.activity_popmovies, menu);
         return true;
     }

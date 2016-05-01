@@ -316,7 +316,8 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
         Uri uri;
         String[] columns;
         String selection;
-        String[] selectionArgs = new String[] { mMovie.getId() };
+        String movieId = mMovie == null ? "-1" : mMovie.getId();
+        String[] selectionArgs = new String[] { movieId };
         switch (id) {
             case MOVIE_LOADER:
                 sortOrder = MovieContract.MovieEntry._ID + " ASC";
@@ -349,6 +350,11 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (getView() == null) return;
+
+        if (mMovie == null) {
+            renderMovie();
+            return;
+        }
 
         cursor.moveToFirst();
         switch (loader.getId()) {
