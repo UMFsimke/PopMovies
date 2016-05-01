@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.beans.mappers;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
@@ -15,6 +16,18 @@ import popmovies.udacity.com.model.database.MovieContract;
  * Defines set of static methods used to create and map {@link Video}
  */
 public class VideoMapper {
+
+    private static final int COLUMN_ID = 0;
+    private static final int COLUMN_NAME = 1;
+    private static final int COLUMN_YOUTUBE_KEY = 2;
+    private static final int COLUMN_MOVIE_ID = 3;
+
+    public static final String[] VIDEO_COLUMNS = {
+            MovieContract.VideoEntry.TABLE_NAME + "." + MovieContract.VideoEntry._ID,
+            MovieContract.VideoEntry.COLUMN_NAME,
+            MovieContract.VideoEntry.COLUMN_YOUTUBE_KEY,
+            MovieContract.VideoEntry.COLUMN_MOVIE_ID
+    };
 
     /**
      * Writes {@link Video} object to {@link Parcel}
@@ -54,5 +67,13 @@ public class VideoMapper {
         contentValues.put(MovieContract.VideoEntry.COLUMN_YOUTUBE_KEY, video.getYoutubeKey());
         contentValues.put(MovieContract.VideoEntry.COLUMN_MOVIE_ID, video.getMovieId());
         return contentValues;
+    }
+
+    public static Video constructFromCursor(@NonNull Cursor cursor, @NonNull Video video) {
+        video.setId(cursor.getString(COLUMN_ID));
+        video.setName(cursor.getString(COLUMN_NAME));
+        video.setYoutubeKey(cursor.getString(COLUMN_YOUTUBE_KEY));
+        video.setMovieId(cursor.getString(COLUMN_MOVIE_ID));
+        return video;
     }
 }

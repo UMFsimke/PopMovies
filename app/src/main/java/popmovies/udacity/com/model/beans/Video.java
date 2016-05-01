@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.beans;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -43,6 +44,14 @@ public class Video implements Parcelable {
     protected String mMovieId;
 
     public Video() {
+    }
+
+    /**
+     * Creates new instance of object from {@link Cursor}
+     * @param cursor {@link Cursor}
+     */
+    public Video(Cursor cursor) {
+        VideoMapper.constructFromCursor(cursor, this);
     }
 
     public void setId(String id) {

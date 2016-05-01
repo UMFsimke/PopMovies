@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.beans;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,6 +42,14 @@ public class Review implements Parcelable {
     protected String mMovieId;
 
     public Review() {
+    }
+
+    /**
+     * Creates new instance of object from {@link Cursor}
+     * @param cursor {@link Cursor}
+     */
+    public Review(Cursor cursor) {
+        ReviewMapper.constructFromCursor(cursor, this);
     }
 
     public void setId(String id) {

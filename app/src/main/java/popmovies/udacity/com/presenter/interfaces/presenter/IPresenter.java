@@ -44,4 +44,9 @@ public interface IPresenter {
      * Sets view for presenter
      */
     <T extends IView> void setView(T view);
+
+    /**
+     * Invoked when activity is created.
+     */
+    void onActivityCreated();
 }

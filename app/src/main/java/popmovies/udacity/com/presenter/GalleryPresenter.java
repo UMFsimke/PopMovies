@@ -4,13 +4,13 @@
 
 package popmovies.udacity.com.presenter;
 
-import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import rx.Observable;
  * Presenter that controls flow of gallery screen
  */
 public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGalleryPresenter,
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Key for gallery bundle values
@@ -65,6 +65,16 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     }
 
     /**
+     * Invokes loader manager for content provider
+     */
+    @Override
+    public void onActivityCreated() {
+        LoaderManager manager = ((AppCompatActivity) getView().getContext())
+                .getSupportLoaderManager();
+        manager.initLoader(MOVIES_LOADER, null, this);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * Loads movies if screen is created
@@ -76,11 +86,17 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         getView().showProgressBar();
     }
 
+    @Override
+    public void loadMoreMovies() {
+        if (mGallery != null && mGallery.hasMore()) {
+            loadMovies();
+        }
+    }
+
     /**
      * Loads additional page of movies from API
      */
-    @Override
-    public void loadMovies() {
+    protected void loadMovies() {
         switch (mSortBy) {
             case POPULAR:
                 loadPopularMovies();
@@ -107,7 +123,8 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     }
 
     protected void loadFavoriteMovies() {
-        LoaderManager manager = ((Activity) getView().getContext()).getLoaderManager();
+        LoaderManager manager = ((AppCompatActivity) getView().getContext())
+                .getSupportLoaderManager();
         manager.restartLoader(MOVIES_LOADER, null, this);
     }
 
@@ -122,7 +139,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
     protected void updateGalleryWithResponse(MoviesResponse response) {
         mGallery.addMovies(response.getResults());
         mGallery.setLastLoadedPage(response.getCurrentPage());
-        mGallery.setHasMore(response.getCurrentPage() ==
+        mGallery.setHasMore(response.getCurrentPage() !=
                 response.getLastPage());
     }
 
@@ -209,8 +226,9 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (getView() == null) return;
+        if (getView() == null || mSortBy != Gallery.GalleryType.FAVORITES) return;
 
+        clearGallery();
         if (cursor == null) {
             renderGallery();
             getView().hideProgressBar();
@@ -218,15 +236,11 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
         }
 
         List<Movie> movies = new ArrayList<>();
-        try {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Movie movie = new Movie(cursor);
-                movies.add(movie);
-                cursor.moveToNext();
-            }
-        } finally {
-            cursor.close();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Movie movie = new Movie(cursor);
+            movies.add(movie);
+            cursor.moveToNext();
         }
 
         mGallery.addMovies(movies);

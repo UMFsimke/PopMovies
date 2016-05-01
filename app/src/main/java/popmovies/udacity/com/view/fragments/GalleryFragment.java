@@ -4,6 +4,7 @@
 
 package popmovies.udacity.com.view.fragments;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 
@@ -58,12 +59,18 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
             @Override
             public void onLoadMore() {
                 if (mPresenter == null) return;
-                mPresenter.loadMovies();
+                mPresenter.loadMoreMovies();
             }
         };
 
         mGallery.addOnScrollListener(mScrollListener);
         mGallery.getRecycledViewPool().setMaxRecycledViews(0, 1000);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPresenter.onActivityCreated();
     }
 
     /**

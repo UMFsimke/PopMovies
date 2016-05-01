@@ -209,4 +209,10 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
         return ((MovieDetailsAdapter) mMovieDetailsList.getAdapter())
                 .getMovieBitmap();
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPresenter.onActivityCreated();
+    }
 }

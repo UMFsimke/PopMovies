@@ -10,7 +10,7 @@ package popmovies.udacity.com.presenter.interfaces.presenter;
 public interface IGalleryPresenter extends IPresenter {
 
     /**
-     * Invoked when more movies should be loaded
+     * Invoked when more movies should be
      */
-    void loadMovies();
+    void loadMoreMovies();
 }

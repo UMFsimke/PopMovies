@@ -6,21 +6,33 @@ package popmovies.udacity.com.presenter;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.model.api.response.BaseResponse;
 import popmovies.udacity.com.model.api.response.ReviewsResponse;
 import popmovies.udacity.com.model.api.response.VideosResponse;
 import popmovies.udacity.com.model.beans.Movie;
+import popmovies.udacity.com.model.beans.Review;
+import popmovies.udacity.com.model.beans.Video;
 import popmovies.udacity.com.model.beans.mappers.MovieMapper;
+import popmovies.udacity.com.model.beans.mappers.ReviewMapper;
+import popmovies.udacity.com.model.beans.mappers.VideoMapper;
 import popmovies.udacity.com.model.database.MovieContract;
 import popmovies.udacity.com.presenter.interfaces.presenter.IMovieDetailsPresenter;
 import popmovies.udacity.com.presenter.interfaces.view.IMovieDetailsView;
@@ -37,12 +49,27 @@ import rx.schedulers.Schedulers;
  * Presenter that controls flow of movie details screen
  */
 public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
-        implements IMovieDetailsPresenter {
+        implements IMovieDetailsPresenter, LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Key for movie bundle values
      */
     private static final String EXTRA_MOVIE = "EXTRA_MOVIE";
+
+    /**
+     * Movie's loader ID
+     */
+    private static final int MOVIE_LOADER = 1;
+
+    /**
+     * Review's loader ID
+     */
+    private static final int REVIEW_LOADER = 2;
+
+    /**
+     * Video's loader ID
+     */
+    private static final int VIDEO_LOADER = 3;
 
     /**
      * Movie whos details will be rendered
@@ -65,11 +92,32 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     }
 
     /**
+     * Invokes loader manager for content provider
+     */
+    @Override
+    public void onActivityCreated() {
+        LoaderManager manager = ((AppCompatActivity) getView().getContext())
+                .getSupportLoaderManager();
+        manager.initLoader(MOVIE_LOADER, null, this);
+        manager.initLoader(VIDEO_LOADER, null, this);
+        manager.initLoader(REVIEW_LOADER, null, this);
+    }
+
+    /**
      * Loads movie's details if screen is created
      */
     @Override
     protected void onViewCreated() {
-        loadReviews();
+        loadMovieFromDatabase();
+    }
+
+    protected void loadMovieFromDatabase() {
+        LoaderManager manager = ((AppCompatActivity) getView().getContext())
+                .getSupportLoaderManager();
+
+        manager.restartLoader(MOVIE_LOADER, null, this);
+        manager.restartLoader(VIDEO_LOADER, null, this);
+        manager.restartLoader(REVIEW_LOADER, null, this);
     }
 
     /**
@@ -266,5 +314,90 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
     @Override
     public boolean doesMovieHasTrailers() {
         return mMovie != null && mMovie.getVideos() != null && mMovie.getVideos().size() > 0;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder;
+        Uri uri;
+        String[] columns;
+        String selection;
+        String[] selectionArgs = new String[] { mMovie.getId() };
+        switch (id) {
+            case MOVIE_LOADER:
+                sortOrder = MovieContract.MovieEntry._ID + " ASC";
+                uri = MovieContract.MovieEntry.CONTENT_URI;
+                columns = MovieMapper.MOVIE_COLUMNS;
+                selection = MovieContract.MovieEntry._ID + " = ?";
+                break;
+            case VIDEO_LOADER:
+                sortOrder = MovieContract.VideoEntry._ID + " ASC";
+                uri = MovieContract.VideoEntry.CONTENT_URI;
+                columns = VideoMapper.VIDEO_COLUMNS;
+                selection = MovieContract.VideoEntry.COLUMN_MOVIE_ID + " = ?";
+                break;
+            default:
+                sortOrder = MovieContract.ReviewEntry._ID + " ASC";
+                uri = MovieContract.ReviewEntry.CONTENT_URI;
+                columns = ReviewMapper.REVIEW_COLUMNS;
+                selection = MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?";
+                break;
+        }
+
+        return new CursorLoader(getView().getContext(),
+                uri,
+                columns,
+                selection,
+                selectionArgs,
+                sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (getView() == null) return;
+
+        cursor.moveToFirst();
+        switch (loader.getId()) {
+            case MOVIE_LOADER:
+                Movie movie = null;
+                while(!cursor.isAfterLast()) {
+                    movie = new Movie(cursor);
+                    cursor.moveToNext();
+                }
+
+                if (movie == null) {
+                    loadReviews();
+                    return;
+                }
+
+                mMovie.setFavorite(true);
+                break;
+            case REVIEW_LOADER:
+                List<Review> reviews = new ArrayList<>();
+                while (!cursor.isAfterLast()) {
+                    Review review = new Review(cursor);
+                    reviews.add(review);
+                    cursor.moveToNext();
+                }
+
+                mMovie.setReviews(reviews);
+                break;
+            case VIDEO_LOADER:
+                List<Video> videos = new ArrayList<>();
+                while (!cursor.isAfterLast()) {
+                    Video video = new Video(cursor);
+                    videos.add(video);
+                    cursor.moveToNext();
+                }
+
+                mMovie.setVideos(videos);
+                break;
+        }
+
+        renderMovie();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 }

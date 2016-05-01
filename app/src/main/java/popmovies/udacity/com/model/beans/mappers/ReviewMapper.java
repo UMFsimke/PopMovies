@@ -5,6 +5,7 @@
 package popmovies.udacity.com.model.beans.mappers;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
@@ -15,6 +16,18 @@ import popmovies.udacity.com.model.database.MovieContract;
  * Defines set of static methods used to create and map {@link Review}
  */
 public class ReviewMapper {
+
+    private static final int COLUMN_ID = 0;
+    private static final int COLUMN_AUTHOR = 1;
+    private static final int COLUMN_CONTENT = 2;
+    private static final int COLUMN_MOVIE_ID = 3;
+
+    public static final String[] REVIEW_COLUMNS = {
+            MovieContract.ReviewEntry.TABLE_NAME + "." + MovieContract.ReviewEntry._ID,
+            MovieContract.ReviewEntry.COLUMN_AUTHOR,
+            MovieContract.ReviewEntry.COLUMN_CONTENT,
+            MovieContract.ReviewEntry.COLUMN_MOVIE_ID
+    };
 
     /**
      * Writes {@link Review} object to {@link Parcel}
@@ -54,5 +67,13 @@ public class ReviewMapper {
         contentValues.put(MovieContract.ReviewEntry.COLUMN_CONTENT, review.getContent());
         contentValues.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, review.getMovieId());
         return contentValues;
+    }
+
+    public static Review constructFromCursor(@NonNull Cursor cursor, @NonNull Review review) {
+        review.setId(cursor.getString(COLUMN_ID));
+        review.setAuthor(cursor.getString(COLUMN_AUTHOR));
+        review.setContent(cursor.getString(COLUMN_CONTENT));
+        review.setMovieId(cursor.getString(COLUMN_MOVIE_ID));
+        return review;
     }
 }

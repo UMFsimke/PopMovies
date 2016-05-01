@@ -12,7 +12,7 @@ public class Constants {
     /**
      * API key
      */
-    public static final String API_KEY = "ENTER YOUR API HERE";
+    public static final String API_KEY = "c792c0422eebfe32dcf85fe1e59ffbe9";
 
     /**
      * JPEG extension for a file
