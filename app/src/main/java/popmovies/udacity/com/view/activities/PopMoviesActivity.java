@@ -55,9 +55,6 @@ public class PopMoviesActivity extends AppCompatActivity
         } else {
             mIsTablet = false;
         }
-
-        GalleryFragment galleryFragment = getGalleryFragment();
-        //galleryFragment.setIsTabletMode(mIsTablet);
     }
 
     /**
@@ -134,5 +131,10 @@ public class PopMoviesActivity extends AppCompatActivity
         Intent intent = new Intent(this, MovieDetailsActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean isTabletMode() {
+        return mIsTablet;
     }
 }

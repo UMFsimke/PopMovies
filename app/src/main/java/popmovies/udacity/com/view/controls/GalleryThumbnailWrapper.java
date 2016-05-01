@@ -6,13 +6,13 @@ package popmovies.udacity.com.view.controls;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
- * Gallery thumbnail view control that keeps aspect ratio
+ * Gallery thumbnail wrapper view control that keeps aspect ratio
  * of the thumbnail from the API.
  */
-public class GalleryThumbnail extends ImageView {
+public class GalleryThumbnailWrapper extends RelativeLayout {
 
     /**
      * Optimal height based on API image height
@@ -27,28 +27,28 @@ public class GalleryThumbnail extends ImageView {
     /**
      * {@inheritDoc}
      */
-    public GalleryThumbnail(Context context) {
+    public GalleryThumbnailWrapper(Context context) {
         super(context);
     }
 
     /**
      * {@inheritDoc}
      */
-    public GalleryThumbnail(Context context, AttributeSet attrs) {
+    public GalleryThumbnailWrapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     /**
      * {@inheritDoc}
      */
-    public GalleryThumbnail(Context context, AttributeSet attrs, int defStyle) {
+    public GalleryThumbnailWrapper(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     /**
      * {@inheritDoc}
      *
-     * When finished with measuring thumbnail image view will be in same
+     * When finished with measuring thumbnail image view wrapper will be in same
      * aspect ratio as API image
      */
     @Override
@@ -57,6 +57,7 @@ public class GalleryThumbnail extends ImageView {
         int width = getMeasuredWidth();
         int height = Math.round((width * THUMBNAIL_OPTIMAL_HEIGHT) / THUMBNAIL_OPTIMAL_WIDTH);
 
-        setMeasuredDimension(width, height);
+        super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
     }
 }

@@ -184,6 +184,7 @@ public class GalleryPresenter extends BasePresenter<IGalleryView> implements IGa
 
         if (isSortByChanged()) {
             clearGallery();
+            renderGallery();
             changeSortBy();
             reloadData();
         }

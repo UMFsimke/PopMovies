@@ -302,7 +302,11 @@ public class MovieDetailsPresenter extends BasePresenter<IMovieDetailsView>
 
     @Override
     public String getTrailerUrl() {
-        return mMovie.getVideos().get(0).getYoutubeUrl();
+        if (doesMovieHasTrailers()) {
+            return mMovie.getVideos().get(0).getYoutubeUrl();
+        } else {
+            return null;
+        }
     }
 
     @Override
