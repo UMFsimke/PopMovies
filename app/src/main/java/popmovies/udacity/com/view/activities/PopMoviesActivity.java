@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
@@ -28,7 +28,7 @@ public class PopMoviesActivity extends AppCompatActivity
     /**
      * Toolbar of the activity
      */
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     /**

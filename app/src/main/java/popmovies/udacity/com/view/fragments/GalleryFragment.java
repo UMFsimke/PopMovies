@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Gallery;
@@ -26,7 +26,7 @@ public class GalleryFragment extends BaseFragment<IGalleryPresenter> implements 
     /**
      * RecyclerView that is used to render movies
      */
-    @Bind(R.id.gallery_recycler_view) protected AutofitRecyclerView mGallery;
+    @BindView(R.id.gallery_recycler_view) protected AutofitRecyclerView mGallery;
 
     /**
      * Scroll listener for lazy loading

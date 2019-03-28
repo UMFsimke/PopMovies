@@ -23,7 +23,7 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import popmovies.udacity.com.R;
@@ -317,27 +317,27 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /**
          * Movie title
          */
-        @Bind(R.id.movie_detail_title) protected TextView mTitle;
+        @BindView(R.id.movie_detail_title) protected TextView mTitle;
 
         /**
          * Movie information
          */
-        @Bind(R.id.movie_detail_info) protected TextView mMovieInfo;
+        @BindView(R.id.movie_detail_info) protected TextView mMovieInfo;
 
         /**
          * Thumbnail
          */
-        @Bind(R.id.movie_detail_thumbnail) protected ImageView mThumnbail;
+        @BindView(R.id.movie_detail_thumbnail) protected ImageView mThumnbail;
 
         /**
          * Overview
          */
-        @Bind(R.id.movie_detail_overview) protected TextView mOverview;
+        @BindView(R.id.movie_detail_overview) protected TextView mOverview;
 
         /**
          * Favorites button
          */
-        @Bind(R.id.favorites) protected Button mFavoritesBtn;
+        @BindView(R.id.favorites) protected Button mFavoritesBtn;
 
         /**
          * Creates view holder for a view
@@ -441,7 +441,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /**
          * Section title
          */
-        @Bind(R.id.header_title) protected TextView mTitle;
+        @BindView(R.id.header_title) protected TextView mTitle;
 
         /**
          * Creates view holder for a view
@@ -472,12 +472,12 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /**
          * Review author
          */
-        @Bind(R.id.review_author) protected TextView mAuthor;
+        @BindView(R.id.review_author) protected TextView mAuthor;
 
         /**
          * Review content
          */
-        @Bind(R.id.review) protected TextView mContent;
+        @BindView(R.id.review) protected TextView mContent;
 
         /**
          * Creates view holder for a view
@@ -503,7 +503,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /**
          * Trailer name
          */
-        @Bind(R.id.trailer_name) protected TextView mTrailerName;
+        @BindView(R.id.trailer_name) protected TextView mTrailerName;
 
         /**
          * Creates view holder for a view

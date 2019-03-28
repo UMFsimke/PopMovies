@@ -23,7 +23,7 @@ import popmovies.udacity.com.model.beans.mappers.MovieMapper;
  */
 public class Movie implements Parcelable {
 
-    private static final String MOVIE_POSTER_ENDPOINT = "http://image.tmdb.org/t/p/w185/";
+    private static final String MOVIE_POSTER_ENDPOINT = "https://image.tmdb.org/t/p/w185";
 
     /**
      * Id

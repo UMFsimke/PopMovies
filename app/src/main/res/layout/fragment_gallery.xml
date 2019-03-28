@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="@dimen/thumbnail_width"
+        android:contentDescription="@string/movies_gallery"
         android:background="@color/backgroundColor"/>
     <ProgressBar
         android:id="@+id/progress_bar"

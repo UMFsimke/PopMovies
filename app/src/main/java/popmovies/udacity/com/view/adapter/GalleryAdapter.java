@@ -15,7 +15,7 @@ import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import popmovies.udacity.com.R;
@@ -116,19 +116,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         /**
          * Gallery thumbnail
          */
-        @Bind(R.id.thumbnail)
+        @BindView(R.id.thumbnail)
         protected ImageView mThumnbail;
 
         /**
          * Top selector
          */
-        @Bind(R.id.top_selector)
+        @BindView(R.id.top_selector)
         protected View mTopSelector;
 
         /**
          * Bottom selector
          */
-        @Bind(R.id.bottom_selector)
+        @BindView(R.id.bottom_selector)
         protected View mBottomSelector;
 
         /**
@@ -186,6 +186,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             String filePath = Utils.getFullImagePathIfExists(
                     mThumnbail.getContext(), movie.getId());
             Picasso picasso = Picasso.with(mThumnbail.getContext().getApplicationContext());
+            picasso.setLoggingEnabled(true);
             RequestCreator creator;
             if (filePath == null) {
                 creator = picasso
@@ -201,6 +202,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     .error(R.drawable.ic_stop)
                     .placeholder(R.drawable.ic_action_refresh)
                     .into(mThumnbail);
+
+            mThumnbail.setContentDescription(movie.getTitle());
         }
     }
 }

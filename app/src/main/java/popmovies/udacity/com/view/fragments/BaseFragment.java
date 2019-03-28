@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.presenter.interfaces.presenter.IPresenter;
@@ -34,7 +34,7 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     /**
      * Progress bar that is shown on the start of screen
      */
-    @Bind(R.id.progress_bar) protected ProgressBar mProgressBar;
+    @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
 
     /**
      * {@inheritDoc}

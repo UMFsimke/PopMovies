@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import popmovies.udacity.com.PopMovies;
 import popmovies.udacity.com.R;
 import popmovies.udacity.com.model.beans.Movie;
@@ -53,7 +53,7 @@ public class MovieDetailFragment extends BaseFragment<IMovieDetailsPresenter>
     /**
      * Recycler view that renders details of a movie
      */
-    @Bind(R.id.movie_details_list) protected RecyclerView mMovieDetailsList;
+    @BindView(R.id.movie_details_list) protected RecyclerView mMovieDetailsList;
 
     /**
      * Creates new instance of a fragment
